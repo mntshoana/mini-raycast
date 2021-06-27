@@ -5,6 +5,7 @@
     <artifactId>mini-raycast-app</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     
+    <packaging>jar</packaging>
     <build>
         <sourceDirectory>src</sourceDirectory>
         <directory>bin</directory>
