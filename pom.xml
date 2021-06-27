@@ -1,0 +1,17 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>theapp.core</groupId>
+    <artifactId>mini-raycast-app</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <directory>bin</directory>
+    </build>
+
+    <properties>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9></maven.compiler.target>
+    </properties>
+</project>
