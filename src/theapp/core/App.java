@@ -42,18 +42,25 @@ public class App extends Canvas implements Runnable{
     public void run() {
         threadRunning = true;
         System.out.println("Game up and running.");
-        for (int i = 0; i < 1000; i++) {
+
+        final int fps = 60;
+        final long hertz = 1000000000 / fps; // 1 sec = 1 billion nano seconds
+        for (int i = 0; threadRunning ; i++) {
+            long time = System.nanoTime();
+            update();
+            long updateTime = System.nanoTime() - time;
+            long milliSecInterval = (hertz - updateTime) / 1000;
             try {
-                Thread.sleep(100);
+                if (milliSecInterval > 0)
+                    Thread.sleep(milliSecInterval);
             } catch (InterruptedException e) {
                 System.out.println(" [Error] Something went wrong with the action thread.");
                 e.printStackTrace();
                 System.exit(1);
             }
-            update();
+
         }
         System.out.println("Game reaches end.");
-        threadRunning = false;
     }
     private void startGame() {
         if (threadRunning)
