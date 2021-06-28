@@ -1,27 +1,42 @@
 package theapp.core;
 
 import java.awt.Canvas;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
-public class App extends Canvas implements Runnable{
-    private static final long uid = 1;
 
+import theapp.graphics.Display;
+
+public class App extends Canvas implements Runnable{
     public static final int width = 1280;
     public static final int height = 720;
 
     private Thread action;
     private boolean threadRunning;
+    private Display display;
 
+    private BufferedImage bufferedImage;
+    private DataBufferInt image;
+    private BufferStrategy bufferStrategy;
+
+    private static final long uid = 1;
     public App(){
         JFrame frame = new JFrame();
         frame.setTitle("Mini Raycast Engine");
         frame.setSize(width, height);
-
-        frame.add(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
+        frame.add(this);
         frame.setVisible(true);
+
+        bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        image = (DataBufferInt) bufferedImage.getRaster().getDataBuffer();
+
+        display = new Display(width, height);
     }
 
     public void run() {
@@ -35,6 +50,7 @@ public class App extends Canvas implements Runnable{
                 e.printStackTrace();
                 System.exit(1);
             }
+            update();
         }
         System.out.println("Game reaches end.");
         threadRunning = false;
@@ -45,6 +61,24 @@ public class App extends Canvas implements Runnable{
 
         action = new Thread(this);
         action.start();
+    }
+
+    private void update(){
+        bufferStrategy = this.getBufferStrategy();// from Canvas
+        if (bufferStrategy == null){
+            createBufferStrategy(3);
+            return;
+        }
+
+        display.render();
+        for (int i = 0; i < width * height; i++){
+            image.getData()[i] = display.displayMemory[i];
+        }
+        Graphics graphics = bufferStrategy.getDrawGraphics();
+        graphics.drawImage(bufferedImage, 0,0,width,height,null);
+        graphics.dispose();
+        bufferStrategy.show();
+
     }
     private void stopGame(){
         if (threadRunning == false)
