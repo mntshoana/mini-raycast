@@ -5,12 +5,12 @@ import java.util.Random;
 import theapp.core.App;
 
 public class DisplayBuffer extends RenderedObject{
+
     // just make 2 throw away test object
     private RenderedObject testObject;
     private RenderedObject testOImageFromCode;
-    private static double testImageFromCodetimer;
     // a counter to help with color changes over time in a controlled way
-    private int runCount;
+    private long ticks;
 
     // Constructor
     public DisplayBuffer(int width, int height){
@@ -37,22 +37,25 @@ public class DisplayBuffer extends RenderedObject{
         });
 
         testOImageFromCode = new RenderedObject(App.width, App.height);
-        testImageFromCodetimer = 0.0;
         testOImageFromCode.load(()->{
-            for (int y = 0; y < testOImageFromCode.height; y++ ){
-                double yDiff = ( y - testOImageFromCode.height / 2.0)  / testOImageFromCode.height; // range of -height/2.5 to -1/2.5
-                if (yDiff < 0)
-                    yDiff = -yDiff;
-                double quotient = 8 / yDiff; // == range between -250/height to -250
-                testImageFromCodetimer += 0.00005;
+            RenderedObject object = testOImageFromCode;
+            double floorDistance = 16;
+            double ceilingDistance = 8;
+            double forward = ticks / 5.0;
+            double rightward = ticks/ 5.0;
+            for (int y = 0; y < object.height; y++ ){
+                double ceiling = ( y - object.height / 2.0)  / object.height;
+                double z = floorDistance / ( (ceiling > 0) ? -ceiling : ceiling );
 
-                if (y > testOImageFromCode.height * 45 / 100 && y < testOImageFromCode.height * 55 / 100  )
+                // clip pixels towards the center that are too far
+                if (y > object.height * 45 / 100 && y < testOImageFromCode.height * 55 / 100  )
                     continue;
-                for (int x = 0; x < testOImageFromCode.width; x++){
-                    double xDiff = (x - testOImageFromCode.width / 2.0) / testOImageFromCode.height; // range of -width/2 to -1/2
-                    double z = xDiff * quotient + testImageFromCodetimer;
-                    int xx = (int) z  & 0XB;
-                    int yy = (int) (quotient  + testImageFromCodetimer) & 0XB;
+
+                for (int x = 0; x < object.width; x++){
+                    double depth = (x - object.width / 2.0) / object.height;
+                    depth = depth*z + ticks;
+                    int xx = (int) depth  & 0XB;
+                    int yy = (int) (z  + ticks) & 0XB;
 
                     int pixel = ((xx * 16) << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
 
@@ -70,21 +73,23 @@ public class DisplayBuffer extends RenderedObject{
 
         // Redraw
         // Playing with background like image drawn from code
-        testOImageFromCode.reload();
         draw(testOImageFromCode, 0, 0);
 
         // Playing around with sin and cos of a circumference to create an animatioon
-        if (runCount % 600 == 0) {
+        if (ticks % 200 == 0)
             testObject.reload();
-            runCount = 1;
-        }
 
         for (int i = 0; i < 2000; i+=70) {
             int xAnimOffset = (int) (Math.sin(((System.currentTimeMillis()-i) % 5000.0 / 5000.0) * Math.PI * 2) * 250);
             int yAnimOffset = (int) (Math.cos(((System.currentTimeMillis()-i) % 5000.0 / 5000.0) * Math.PI * 2) * 250);
 
-            runCount++;
             draw(testObject, (App.width - testObject.width) / 2 + xAnimOffset, (App.height - testObject.height) / 2 - yAnimOffset);
         }
+        tick();
+    }
+    private void tick(){
+        testOImageFromCode.reload();
+        //testObject.reload();
+        ticks++;
     }
 }
