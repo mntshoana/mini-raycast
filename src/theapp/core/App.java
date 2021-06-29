@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
-import theapp.graphics.Display;
+import theapp.graphics.DisplayBuffer;
 
 public class App extends Canvas implements Runnable{
     public static final int width = 1280;
@@ -15,7 +15,7 @@ public class App extends Canvas implements Runnable{
 
     private Thread action;
     private boolean threadRunning;
-    private Display display;
+    private DisplayBuffer display;
 
     private BufferedImage bufferedImage;
     private DataBufferInt image;
@@ -36,7 +36,7 @@ public class App extends Canvas implements Runnable{
         bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         image = (DataBufferInt) bufferedImage.getRaster().getDataBuffer();
 
-        display = new Display(width, height);
+        display = new DisplayBuffer(width, height);
     }
 
     public void run() {
@@ -58,7 +58,6 @@ public class App extends Canvas implements Runnable{
                 e.printStackTrace();
                 System.exit(1);
             }
-
         }
         System.out.println("Game reaches end.");
     }
@@ -77,7 +76,7 @@ public class App extends Canvas implements Runnable{
             return;
         }
 
-        display.render();
+        display.update();
         for (int i = 0; i < width * height; i++){
             image.getData()[i] = display.displayMemory[i];
         }

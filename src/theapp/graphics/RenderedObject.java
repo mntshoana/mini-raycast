@@ -3,6 +3,7 @@ package theapp.graphics;
 import theapp.core.App;
 
 public class RenderedObject {
+    private Runnable loader;// to hold the method that populats the object with a color maps
     protected final int width;
     protected final int height;
     public final int[] displayMemory;
@@ -11,6 +12,14 @@ public class RenderedObject {
         this.width = width;
         this.height = height;
         this.displayMemory = new int[width * height];
+    }
+
+    public void load(Runnable method){
+        this.loader = method;
+        loader.run();
+    }
+    public void reload(){
+        loader.run();
     }
 
     public void draw(RenderedObject object, int xOffset, int yOffset){
@@ -22,8 +31,12 @@ public class RenderedObject {
                 int xPixel = x + xOffset;
                 if (xPixel < 0 || xPixel >= App.width)
                     continue;
-                displayMemory[xPixel + this.width*(yPixel)]
-                        = object.displayMemory[x + object.width*(y)];
+
+                int alpha = object.displayMemory[x + object.width*(y)]; // allow empty pixels to not be written which allows transparency
+                if (alpha > 0) {
+                    displayMemory[xPixel + this.width * (yPixel)]
+                            = object.displayMemory[x + object.width * (y)];
+                }
             }
         }
     }
