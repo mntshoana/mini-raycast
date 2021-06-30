@@ -43,9 +43,16 @@ public class DisplayBuffer extends RenderedObject{
             double ceilingDistance = 8;
             double forward = ticks / 5.0;
             double rightward = ticks/ 5.0;
+            double rotation = ticks / 100.0;
+            double cos = Math.cos(rotation);
+            double sine = Math.sin(rotation);
             for (int y = 0; y < object.height; y++ ){
                 double ceiling = ( y - object.height / 2.0)  / object.height;
-                double z = floorDistance / ( (ceiling > 0) ? -ceiling : ceiling );
+                double z;
+                if (ceiling > 0)
+                    z = floorDistance /  ceiling;
+                else
+                    z = ceilingDistance / -ceiling;
 
                 // clip pixels towards the center that are too far
                 if (y > object.height * 45 / 100 && y < testOImageFromCode.height * 55 / 100  )
@@ -54,8 +61,8 @@ public class DisplayBuffer extends RenderedObject{
                 for (int x = 0; x < object.width; x++){
                     double depth = (x - object.width / 2.0) / object.height;
                     depth = depth*z + ticks;
-                    int xx = (int) depth  & 0XB;
-                    int yy = (int) (z  + ticks) & 0XB;
+                    int xx = (int) (depth * cos + z * sine) & 0XB;
+                    int yy = (int) (z * cos - depth * sine) & 0XB;
 
                     int pixel = ((xx * 16) << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
 
