@@ -57,19 +57,27 @@ public class DisplayBuffer extends RenderedObject{
             double cos = Math.cos(rotation);
             double sine = Math.sin(rotation);
             for (int y = 0; y < object.height; y++ ){
+                                           /*adjacent*/       /*opposite*/
                 double ceiling = ( y - object.height / 2.0)  / object.height;
-                double z;
+                // ceiling ranges from [-1/2 to 1/2) not including 1/2
+                // asuming this is the cotangent
+
+                double z; // positive, growing to infinity
                 if (ceiling > 0)
-                    z = floorDistance /  ceiling;
+                    z = floorDistance /  ceiling; // invert cotan = tan
                 else
                     z = ceilingDistance / -ceiling;
 
                 // clip pixels towards the center that are too far
-                if (y > object.height * 45 / 100 && y < testOImageFromCode.height * 55 / 100  )
+                if (z > 400) {
+                    for (int x = 0; x < object.width; x++)
+                        testOImageFromCode.displayMemory[x + testOImageFromCode.width * y] = 0;
                     continue;
-
+                }
                 for (int x = 0; x < object.width; x++){
+                                            /*adjacent*/       /*hypotenuse*/
                     double depth = (x - object.width / 2.0) / object.height;
+                    // depth ranges from [-0.888888 to 0.8875]
                     depth = depth*z;
                     int xx = (int) ((depth * cos + z * sine)  + rightward) ;
                     int yy = (int) ((z * cos - depth * sine) + forward) ;
