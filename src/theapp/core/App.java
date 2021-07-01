@@ -36,11 +36,10 @@ public class App extends Canvas implements Runnable{
         bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         image = (DataBufferInt) bufferedImage.getRaster().getDataBuffer();
 
-        display = new DisplayBuffer(width, height);
+        display = new DisplayBuffer(width, height, this);
     }
 
     public void run() {
-        threadRunning = true;
         System.out.println("Game up and running.");
 
         final long second = 1000000000; // nano seconds per second
@@ -58,12 +57,13 @@ public class App extends Canvas implements Runnable{
         }
         System.out.println("Game reaches end.");
     }
-    private void startGame() {
+    public void startGame() {
         if (threadRunning)
             return; // running just once for now
 
         action = new Thread(this);
         action.start();
+        threadRunning = true;
     }
 
     private void update(){
@@ -84,7 +84,7 @@ public class App extends Canvas implements Runnable{
 
     }
 
-    private void stopGame(){
+    public void stopGame(){
         if (threadRunning == false)
             return; // do nothing
         try {

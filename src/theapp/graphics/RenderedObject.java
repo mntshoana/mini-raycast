@@ -1,9 +1,13 @@
 package theapp.graphics;
 
 import theapp.core.App;
+import theapp.input.Controller;
+
+import java.awt.event.KeyEvent;
 
 public class RenderedObject {
     private Runnable loader;// to hold the method that populats the object with a color maps
+    public Controller controller;
     protected final int width;
     protected final int height;
     public final int[] displayMemory;
@@ -12,13 +16,21 @@ public class RenderedObject {
         this.width = width;
         this.height = height;
         this.displayMemory = new int[width * height];
+        controller = new Controller();
     }
 
     public void load(Runnable method){
         this.loader = method;
         loader.run();
     }
-    public void reload(){
+    public void reload(boolean[] keyPressed){
+        boolean forward = keyPressed[KeyEvent.VK_W];
+        boolean back = keyPressed[KeyEvent.VK_S];
+        boolean left = keyPressed[KeyEvent.VK_A];
+        boolean right = keyPressed[KeyEvent.VK_D];
+        boolean turnLeft = keyPressed[KeyEvent.VK_LEFT];
+        boolean turnRight = keyPressed[KeyEvent.VK_RIGHT];
+        controller.update(forward, back, left, right, turnLeft, turnRight);
         loader.run();
     }
 

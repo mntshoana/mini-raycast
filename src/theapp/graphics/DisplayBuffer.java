@@ -1,22 +1,32 @@
 package theapp.graphics;
 
+import java.awt.event.KeyEvent;
 import java.util.Random;
-
 import theapp.core.App;
+import theapp.input.InputHandler;
 
 public class DisplayBuffer extends RenderedObject{
 
     // just make 2 throw away test object
     private RenderedObject testObject;
     private RenderedObject testOImageFromCode;
+
+    private InputHandler input;
+    private App parent;
     // a counter to help with color changes over time in a controlled way
     private long ticks;
 
     // Constructor
-    public DisplayBuffer(int width, int height){
+    public DisplayBuffer(int width, int height, App parent){
         super(width, height);
 
-        testObject = new RenderedObject(320, 180); // fill left 400 pixels of the screen with random colors
+        input = new InputHandler();
+        this.parent = parent;
+        parent.addKeyListener(input);
+        parent.addFocusListener(input);
+        parent.addMouseListener(input);
+        parent.addMouseMotionListener(input);
+        /*testObject = new RenderedObject(320, 180); // fill left 400 pixels of the screen with random colors
 
         testObject.load(()->{
             // Fills testObject with random colors
@@ -34,16 +44,16 @@ public class DisplayBuffer extends RenderedObject{
                     }
                 }
             }
-        });
+        });*/
 
         testOImageFromCode = new RenderedObject(App.width, App.height);
         testOImageFromCode.load(()->{
             RenderedObject object = testOImageFromCode;
-            double floorDistance = 16;
-            double ceilingDistance = 8;
-            double forward = ticks / 5.0;
-            double rightward = ticks/ 5.0;
-            double rotation = ticks / 100.0;
+            double floorDistance = 24;
+            double ceilingDistance = 20;
+            double forward = object.controller.z ;
+            double rightward = object.controller.x;
+            double rotation = object.controller.rotation;
             double cos = Math.cos(rotation);
             double sine = Math.sin(rotation);
             for (int y = 0; y < object.height; y++ ){
@@ -60,11 +70,11 @@ public class DisplayBuffer extends RenderedObject{
 
                 for (int x = 0; x < object.width; x++){
                     double depth = (x - object.width / 2.0) / object.height;
-                    depth = depth*z + ticks;
-                    int xx = (int) (depth * cos + z * sine) & 0XB;
-                    int yy = (int) (z * cos - depth * sine) & 0XB;
+                    depth = depth*z;
+                    int xx = (int) ((depth * cos + z * sine)  + rightward) ;
+                    int yy = (int) ((z * cos - depth * sine) + forward) ;
 
-                    int pixel = ((xx * 16) << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
+                    int pixel = ((xx * 16) & 0xB << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
 
                     testOImageFromCode.displayMemory[x+ testOImageFromCode.width*(y)] = pixel;
                 }
@@ -74,17 +84,20 @@ public class DisplayBuffer extends RenderedObject{
 
     // Renders everything to the screen
     public void update(){
+        tick();
         // Clear buffer
         for (int i = 0, len = App.width * App.height; i < len; i++)
             displayMemory[i] = 0;
 
         // Redraw
         // Playing with background like image drawn from code
+        testOImageFromCode.reload(input.keyPresses);
         draw(testOImageFromCode, 0, 0);
 
+        /*
         // Playing around with sin and cos of a circumference to create an animatioon
         if (ticks % 200 == 0)
-            testObject.reload();
+            testObject.reload(input.keyPresses);
 
         for (int i = 0; i < 2000; i+=70) {
             int xAnimOffset = (int) (Math.sin(((System.currentTimeMillis()-i) % 5000.0 / 5000.0) * Math.PI * 2) * 250);
@@ -92,11 +105,12 @@ public class DisplayBuffer extends RenderedObject{
 
             draw(testObject, (App.width - testObject.width) / 2 + xAnimOffset, (App.height - testObject.height) / 2 - yAnimOffset);
         }
-        tick();
+*/
     }
     private void tick(){
-        testOImageFromCode.reload();
+        testOImageFromCode.reload(input.keyPresses);
         //testObject.reload();
         ticks++;
+
     }
 }
