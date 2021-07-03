@@ -56,6 +56,7 @@ public class DisplayBuffer extends RenderedObject{
             double rotation = object.controller.rotation;
             double cos = Math.cos(rotation);
             double sine = Math.sin(rotation);
+
             for (int y = 0; y < object.height; y++ ){
                                            /*adjacent*/       /*opposite*/
                 double ceiling = ( y - object.height / 2.0)  / object.height;
@@ -68,23 +69,41 @@ public class DisplayBuffer extends RenderedObject{
                 else
                     z = ceilingDistance / -ceiling;
 
-                // clip pixels towards the center that are too far
-                if (z > 400) {
-                    for (int x = 0; x < object.width; x++)
-                        testOImageFromCode.displayMemory[x + testOImageFromCode.width * y] = 0;
-                    continue;
-                }
                 for (int x = 0; x < object.width; x++){
                                             /*adjacent*/       /*hypotenuse*/
                     double depth = (x - object.width / 2.0) / object.height;
                     // depth ranges from [-0.888888 to 0.8875]
                     depth = depth*z;
+
+                    // clip pixels towards the center that are too far
+                    //if (z > 400) {
+                        //testOImageFromCode.displayMemory[x + object.width * y] = 0;
+                      //  continue;
+                    //}
+
                     int xx = (int) ((depth * cos + z * sine)  + rightward) ;
                     int yy = (int) ((z * cos - depth * sine) + forward) ;
 
                     int pixel = ((xx * 16) & 0xB << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
 
-                    testOImageFromCode.displayMemory[x+ testOImageFromCode.width*(y)] = pixel;
+                    // Fade using gradient
+                    final double fadeDist = 5000.0;
+                    int colour = pixel;
+                    int brightness = (int)(fadeDist/ z);
+
+                    if (brightness < 0)
+                        brightness = 0;
+                    if (brightness > 255)
+                        brightness = 255;
+                    int r = (colour >> 16) & 0xff;
+                    r = r * brightness / 255;
+                    int g = (colour >> 8) & 0xff;
+                    g = g * brightness / 255;
+                    int b = colour & 0xff;
+                    b = b * brightness / 255;
+                    testOImageFromCode.displayMemory[x + object.width * y] = (r <<16) | (g << 8) | b;
+                    //testOImageFromCode.displayMemory[x+ object.width*(y)] = pixel;
+
                 }
             }
         });
