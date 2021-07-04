@@ -118,9 +118,9 @@ public class DisplayBuffer extends RenderedObject{
 
         // Redraw
         // Playing with background like image drawn from code
-        testOImageFromCode.reload(input.keyPresses);
+        //testOImageFromCode.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         draw(testOImageFromCode, 0, 0);
-
+        System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
         /*
         // Playing around with sin and cos of a circumference to create an animatioon
         if (ticks % 200 == 0)
@@ -135,7 +135,8 @@ public class DisplayBuffer extends RenderedObject{
 */
     }
     private void tick(){
-        testOImageFromCode.reload(input.keyPresses);
+        input.captureCurrentMousePos();
+        testOImageFromCode.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         //testObject.reload();
         ticks++;
 

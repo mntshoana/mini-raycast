@@ -23,7 +23,7 @@ public class RenderedObject {
         this.loader = method;
         loader.run();
     }
-    public void reload(boolean[] keyPressed){
+    public void reload(boolean[] keyPressed, int mouseX, int mouseY){
         boolean forward = keyPressed[KeyEvent.VK_W];
         boolean back = keyPressed[KeyEvent.VK_S];
         boolean left = keyPressed[KeyEvent.VK_A];
@@ -31,6 +31,7 @@ public class RenderedObject {
         boolean turnLeft = keyPressed[KeyEvent.VK_LEFT];
         boolean turnRight = keyPressed[KeyEvent.VK_RIGHT];
         controller.update(forward, back, left, right, turnLeft, turnRight);
+        controller.update(0, 0, mouseX);
         loader.run();
     }
 

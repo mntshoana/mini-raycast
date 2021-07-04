@@ -1,7 +1,6 @@
 package theapp.core;
 
-import java.awt.Canvas;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -17,7 +16,7 @@ public class App extends Canvas implements Runnable{
     private boolean threadRunning;
     private DisplayBuffer display;
 
-    private BufferedImage bufferedImage;
+    private BufferedImage bufferedImage, cursor;
     private DataBufferInt image;
     private BufferStrategy bufferStrategy;
 
@@ -36,6 +35,11 @@ public class App extends Canvas implements Runnable{
         bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         image = (DataBufferInt) bufferedImage.getRaster().getDataBuffer();
 
+        // Change the cursor to not be visible
+        cursor = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), "blankCursor");
+        frame.getContentPane().setCursor(blankCursor);
+        
         display = new DisplayBuffer(width, height, this);
     }
 
