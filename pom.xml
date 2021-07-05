@@ -9,6 +9,11 @@
     <build>
         <sourceDirectory>src</sourceDirectory>
         <directory>bin</directory>
+        <resources>
+            <resource>
+                <directory>res</directory>
+            </resource>
+        </resources>
     </build>
 
     <properties>

@@ -21,6 +21,8 @@ public class App extends Canvas implements Runnable{
     private BufferStrategy bufferStrategy;
 
     private static final long uid = 1;
+
+    private String fps = "";
     public App(){
         JFrame frame = new JFrame();
         frame.setTitle("Mini Raycast Engine");
@@ -39,7 +41,7 @@ public class App extends Canvas implements Runnable{
         cursor = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), "blankCursor");
         frame.getContentPane().setCursor(blankCursor);
-        
+
         display = new DisplayBuffer(width, height, this);
     }
 
@@ -53,6 +55,7 @@ public class App extends Canvas implements Runnable{
             long currentTime = System.nanoTime();
             if (currentTime - prevTime > second) {
                 System.out.println(" [LOG] " + frameCount + " fps.");
+                fps = frameCount + "FPS";
                 prevTime += second;
                 frameCount = 0;
             }
@@ -83,6 +86,11 @@ public class App extends Canvas implements Runnable{
         }
         Graphics graphics = bufferStrategy.getDrawGraphics();
         graphics.drawImage(bufferedImage, 0,0,width,height,null);
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(new Font("Akzidenz Grotesk", 0, 50));
+        graphics.drawString(fps, 20, 50);
+
+
         graphics.dispose();
         bufferStrategy.show();
 

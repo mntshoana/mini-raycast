@@ -84,10 +84,15 @@ public class DisplayBuffer extends RenderedObject{
                     int xx = (int) ((depth * cos + z * sine)  + rightward) ;
                     int yy = (int) ((z * cos - depth * sine) + forward) ;
 
-                    int pixel = ((xx * 16) & 0xB << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
-
+                    int pixel;
+                    if (y <= object.height/2)
+                    //pixel = ((xx * 16) & 0xB << 8 | (xx * 16) << 16 ) | (yy *16 << 16);
+                    // Apply texture instead
+                        pixel = Texture.ceiling.displayMemory[(xx & 7) + (yy & 7) * 8 /*image has width of 8*/];
+                    else
+                    pixel = Texture.floor.displayMemory[(xx & 7) + (yy & 7) * 8 /*image has width of 8*/];
                     // Fade using gradient
-                    final double fadeDist = 5000.0;
+                    final double fadeDist = 8000.0;
                     int colour = pixel;
                     int brightness = (int)(fadeDist/ z);
 
@@ -103,7 +108,6 @@ public class DisplayBuffer extends RenderedObject{
                     b = b * brightness / 255;
                     testOImageFromCode.displayMemory[x + object.width * y] = (r <<16) | (g << 8) | b;
                     //testOImageFromCode.displayMemory[x+ object.width*(y)] = pixel;
-
                 }
             }
         });
