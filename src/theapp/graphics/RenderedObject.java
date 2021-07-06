@@ -30,10 +30,17 @@ public class RenderedObject {
         boolean right = keyPressed[KeyEvent.VK_D];
         boolean turnLeft = keyPressed[KeyEvent.VK_LEFT];
         boolean turnRight = keyPressed[KeyEvent.VK_RIGHT];
-        controller.update(forward, back, left, right, turnLeft, turnRight);
+
+        boolean jump = keyPressed[KeyEvent.VK_SPACE];
+
+        boolean crouch = keyPressed[KeyEvent.VK_CONTROL] || keyPressed[KeyEvent.VK_META];
+        boolean sprint = keyPressed[KeyEvent.VK_ALT];
+        controller.update(forward, back, left, right, turnLeft, turnRight, sprint);
+        controller.update(jump, crouch);
         controller.update(0, 0, mouseX);
         loader.run();
     }
+
 
     public void draw(RenderedObject object, int xOffset, int yOffset){
         for (int y = 0; y < object.height; y++){

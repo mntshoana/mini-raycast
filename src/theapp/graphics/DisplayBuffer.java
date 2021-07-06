@@ -49,10 +49,11 @@ public class DisplayBuffer extends RenderedObject{
         testOImageFromCode = new RenderedObject(App.width, App.height);
         testOImageFromCode.load(()->{
             RenderedObject object = testOImageFromCode;
-            double floorDistance = 24;
+            double floorDistance = 15;
             double ceilingDistance = 20;
             double forward = object.controller.z ;
             double rightward = object.controller.x;
+            double upward = object.controller.y;
             double rotation = object.controller.rotation;
             double cos = Math.cos(rotation);
             double sine = Math.sin(rotation);
@@ -65,9 +66,9 @@ public class DisplayBuffer extends RenderedObject{
 
                 double z; // positive, growing to infinity
                 if (ceiling > 0)
-                    z = floorDistance /  ceiling; // invert cotan = tan
+                    z = (floorDistance + upward) /  ceiling; // invert cotan = tan
                 else
-                    z = ceilingDistance / -ceiling;
+                    z = (ceilingDistance - upward) / -ceiling;
 
                 for (int x = 0; x < object.width; x++){
                                             /*adjacent*/       /*hypotenuse*/
@@ -122,7 +123,6 @@ public class DisplayBuffer extends RenderedObject{
 
         // Redraw
         // Playing with background like image drawn from code
-        //testOImageFromCode.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         draw(testOImageFromCode, 0, 0);
         System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
         /*
