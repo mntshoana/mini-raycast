@@ -65,10 +65,17 @@ public class DisplayBuffer extends RenderedObject{
                 // asuming this is the cotangent
 
                 double z; // positive, growing to infinity
+                double walkingBob = Math.sin(ticks / Math.PI);
+                if (!object.controller.moved)
+                    walkingBob = 0.0;
+                else if (object.controller.crouched && object.controller.moved)
+                    walkingBob = Math.sin(ticks / Math.PI /2) *  0.3;
+                else if (object.controller.moved)
+                    walkingBob *= 0.5;
                 if (ceiling > 0)
-                    z = (floorDistance + upward) /  ceiling; // invert cotan = tan
+                    z = (floorDistance + upward +walkingBob) /  ceiling; // invert cotan = tan
                 else
-                    z = (ceilingDistance - upward) / -ceiling;
+                    z = (ceilingDistance - upward -walkingBob) / -ceiling;
 
                 for (int x = 0; x < object.width; x++){
                                             /*adjacent*/       /*hypotenuse*/

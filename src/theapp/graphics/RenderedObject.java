@@ -35,6 +35,7 @@ public class RenderedObject {
 
         boolean crouch = keyPressed[KeyEvent.VK_CONTROL] || keyPressed[KeyEvent.VK_META];
         boolean sprint = keyPressed[KeyEvent.VK_ALT];
+
         controller.update(forward, back, left, right, turnLeft, turnRight, sprint);
         controller.update(jump, crouch);
         controller.update(0, 0, mouseX);

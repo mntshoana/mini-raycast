@@ -6,9 +6,11 @@ public class Controller {
     public double rotation;
     public double rotation2;
 
+    public boolean moved;
     public boolean jumped;
     public boolean crouched;
     private int jumpTime;
+    private boolean jumpPeak;
     public void update(boolean forward, boolean back,
                        boolean left, boolean right,
                        boolean turnLeft, boolean turnRight, boolean sprint){
@@ -29,6 +31,9 @@ public class Controller {
             rotation2 -= rotationSpeed;
         if (turnRight)
             rotation2 += rotationSpeed;
+
+
+        moved = ((forward || back || left || right) && (!jumped));
 
         if (sprint)
             walkSpeed = 1.6;
@@ -68,38 +73,68 @@ public class Controller {
         rotation2 *= 0.8;
     }
     public void update(boolean jump, boolean crouch){
-        double jumpHeight = 1.5, crouchLevel = 2.5;
-        if (crouch)
-            crouched = true;
-        else
-            crouched = false;
+        final double maxH = 15, minH = -10;
+        double jumpIncrements = 0.5, crouchLevel = 2.5;
+
+        crouched = (y < 0) ? true: false;
+        jumped = (y > 0 ) ? true: false;
+
         if (y == 0)
-            jumped = false;
-        if (y == 15)
-            jumped = true;
+            jumpPeak = false;
+        if (jumped && !jump)
+            jumpPeak = true;
 
+        if (!jumpPeak && jump /*button*/ && y >= 0 && y < maxH) { // elevate with button
+                if (y <= 2)
+                    y +=  jumpIncrements;
+                else if (y < 5)
+                    y += (4 * jumpIncrements);
+                else if (y < 10)
+                    y += (3 * jumpIncrements);
+                else if (y < 13)
+                    y += (2 * jumpIncrements);
+                else
+                    y += jumpIncrements;
 
-        if (jump && y >= 0 && y < 15 && jumped == false) {
-            if (jumpTime >= 0) {
-                y += jumpHeight;
-                jumpTime = 2;
+                if (y == maxH)
+                    jumpPeak = true;
+
+                jumpTime += 1; // moment of hover in air
+        }
+        else if (!jumpPeak && !jump /*button*/ && jumped && y < maxH) { // incomplete/short jump
+                y += jumpIncrements;
+                if (jumpTime > 2) {
+                    jumpPeak = true;
+                    jumpTime--;
+                }
+        }
+        else if (!jump /*button*/ && jumped || jumpPeak == true) { // de-elevate
+            jumpPeak = true;
+
+            if (y > 13)
+                y -= jumpIncrements;
+            else if (y > 10 ) {
+                if (jumpTime <= 2) {// hover a little
+                    jumpTime--;
+                    y -= jumpIncrements;
+                } else
+                    y -= (2 * jumpIncrements);
             }
+            else if (y > 5)
+                y -= (3 * jumpIncrements);
+            else if (y > 2)
+                y -= (2 * jumpIncrements);
             else
-                jumpTime++;
-        }
-        else if (!jump && y > 0 || jumped == true && y > 0) {
-            jumped = true;
-            if (jumpTime > 0)
-                jumpTime--;
-            else {
-                y -= jumpHeight;
-                jumpTime = -5;
-            }
+                y -= jumpIncrements;
+            if (y < 0)
+                y = 0;
+            jumpTime = -1; // wait time before next jump
         }
 
-        if (crouch && y <= 0 && y > -10)
-            y-= crouchLevel;
-        else if (!crouch && y < 0){
+
+        if (crouch && y <= 0.0 && y > minH)
+            y -= crouchLevel;
+        else if (!crouch && crouched){
             y += crouchLevel;
         }
     }
