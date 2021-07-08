@@ -70,6 +70,8 @@ public class DisplayBuffer extends RenderedObject{
                     walkingBob = 0.0;
                 else if (object.controller.crouched && object.controller.moved)
                     walkingBob = Math.sin(ticks / Math.PI /2) *  0.3;
+                else if (object.controller.moved && object.controller.sprint)
+                    walkingBob *= Math.sin(ticks / Math.PI * 1.5) *  0.7;
                 else if (object.controller.moved)
                     walkingBob *= 0.5;
                 if (ceiling > 0)

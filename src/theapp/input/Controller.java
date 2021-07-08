@@ -7,6 +7,7 @@ public class Controller {
     public double rotation2;
 
     public boolean moved;
+    public boolean sprint;
     public boolean jumped;
     public boolean crouched;
     private int jumpTime;
@@ -18,7 +19,7 @@ public class Controller {
         double walkSpeed = 1;
         double zMove = 0;
         double xMove = 0;
-
+        this.sprint = sprint;
         if (forward)
             zMove++;
         if (back)
