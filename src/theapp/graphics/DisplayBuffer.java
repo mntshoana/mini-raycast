@@ -1,6 +1,7 @@
 package theapp.graphics;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.Random;
 import theapp.core.App;
 import theapp.input.InputHandler;
@@ -9,7 +10,8 @@ public class DisplayBuffer extends RenderedObject{
 
     // just make 2 throw away test object
     private RenderedObject testObject;
-    private RenderedObject testOImageFromCode;
+    private RenderedObject roofFloor;
+    private RenderedObject walls;
 
     private InputHandler input;
     private App parent;
@@ -46,9 +48,9 @@ public class DisplayBuffer extends RenderedObject{
             }
         });*/
 
-        testOImageFromCode = new RenderedObject(App.width, App.height);
-        testOImageFromCode.load(()->{
-            RenderedObject object = testOImageFromCode;
+        roofFloor = new RenderedObject(App.width, App.height);
+        roofFloor.load(()->{
+            RenderedObject object = roofFloor;
             double floorDistance = 15;
             double ceilingDistance = 20;
             double forward = object.controller.z ;
@@ -101,23 +103,77 @@ public class DisplayBuffer extends RenderedObject{
                         pixel = Texture.ceiling.displayMemory[(xx & 7) + (yy & 7) * 8 /*image has width of 8*/];
                     else
                     pixel = Texture.floor.displayMemory[(xx & 7) + (yy & 7) * 8 /*image has width of 8*/];
-                    // Fade using gradient
-                    final double fadeDist = 8000.0;
-                    int colour = pixel;
-                    int brightness = (int)(fadeDist/ z);
 
-                    if (brightness < 0)
-                        brightness = 0;
-                    if (brightness > 255)
-                        brightness = 255;
-                    int r = (colour >> 16) & 0xff;
-                    r = r * brightness / 255;
-                    int g = (colour >> 8) & 0xff;
-                    g = g * brightness / 255;
-                    int b = colour & 0xff;
-                    b = b * brightness / 255;
-                    testOImageFromCode.displayMemory[x + object.width * y] = (r <<16) | (g << 8) | b;
+                    object.displayMemory[x + object.width * y] = fade(pixel, z);
                     //testOImageFromCode.displayMemory[x+ object.width*(y)] = pixel;
+                }
+            }
+        });
+
+        walls = new RenderedObject(App.width, App.height);
+        walls.load(()->{
+            Arrays.fill(walls.displayMemory, 0);
+            final double cos = Math.cos(walls.controller.rotation);
+            final double sin = Math.sin(walls.controller.rotation);
+
+            double xLeft = 0;
+            double xRight = 10;
+            double zDistance = 2;
+            double yHeight = 0;
+
+            double newXLeft = (xLeft - walls.controller.x) * 2;
+            double newZDistance4L = (zDistance - walls.controller.z) *2;
+            double rotationL = newXLeft * cos
+                             - newZDistance4L * sin;
+
+            double yTL = ((-yHeight) + walls.controller.y) * 2;
+            double yBL = ((0.5 - yHeight) + walls.controller.y)* 2;
+            double rotationLZ = newZDistance4L * cos
+                            + newXLeft * sin;
+
+            double newXRight = (xRight  - walls.controller.x) * 2;
+            double newZDistance4R = (zDistance - walls.controller.z) *2;
+            double rotationR = newXRight * cos
+                    - newZDistance4R * sin;
+
+            double yTR = ((-yHeight) + walls.controller.y) * 2;
+            double yBR = ((0.5 - yHeight) + walls.controller.y)* 2;
+            double rotationRZ = newZDistance4R * cos
+                                + newXRight * sin;
+
+            double xPixelLeft = (rotationL / rotationLZ * walls.height + walls.width / 2);
+            double xPixelRight = (rotationR / rotationRZ * walls.height + walls.width / 2);
+
+            if (xPixelLeft >= xPixelRight) // do not render negatives
+                return;
+
+            int xPixelLeftInt = (int) xPixelLeft;
+            int xPixelRightInt = (int) xPixelRight;
+            if (xPixelLeftInt < 0 )
+                xPixelLeftInt = 0;
+            if (xPixelRightInt > App.width)
+                xPixelRightInt = App.width;
+
+            int yPixelTopLeftInt =  (int) (yTL / rotationLZ * App.height + App.height /2);
+            int yPixelBottomLtInt = (int) (yBL / rotationLZ * App.height + App.height /2);
+            int yPixelTopRightInt = (int) (yTR / rotationRZ * App.height + App.height /2);
+            int yPixelBottomRInt =  (int) (yBR / rotationRZ * App.height + App.height /2);
+
+            for (int x = xPixelLeftInt; x < xPixelRightInt; x++){
+                double pixelRotation = (x - xPixelLeft) / (xPixelRight - xPixelLeft);
+                double yPixelTop =    yPixelTopLeftInt + (yPixelTopRightInt - yPixelTopLeftInt) * pixelRotation ;
+                double yPixelBottom = yPixelBottomLtInt + (yPixelBottomRInt - yPixelBottomLtInt) * pixelRotation;
+
+                int yPixelTopInt = (int) yPixelTop;
+                int yPixelBottomInt = (int) yPixelBottom;
+
+                if (yPixelTopInt < 0)
+                    yPixelTopInt = 0;
+                if (yPixelBottomInt > App.height)
+                    yPixelBottomInt = App.height;
+
+                for (int y = yPixelTopInt; y < yPixelBottomInt; y++){
+                    walls.displayMemory[x+y*walls.width] = fade(0x232499, zDistance - walls.controller.z); // color wall
                 }
             }
         });
@@ -132,8 +188,10 @@ public class DisplayBuffer extends RenderedObject{
 
         // Redraw
         // Playing with background like image drawn from code
-        draw(testOImageFromCode, 0, 0);
+        draw(roofFloor, 0, 0);
         System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
+
+        draw(walls, 0, 0);
         /*
         // Playing around with sin and cos of a circumference to create an animatioon
         if (ticks % 200 == 0)
@@ -149,7 +207,8 @@ public class DisplayBuffer extends RenderedObject{
     }
     private void tick(){
         input.captureCurrentMousePos();
-        testOImageFromCode.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
+        roofFloor.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
+        walls.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         //testObject.reload();
         ticks++;
 

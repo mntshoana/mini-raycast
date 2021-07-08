@@ -61,4 +61,24 @@ public class RenderedObject {
             }
         }
     }
+
+    public int fade(int pixel, double z){
+        // Fade using gradient
+        final double fadeDist = 8000.0;
+        int colour = pixel;
+        int brightness = (int)(fadeDist/ z);
+
+        if (brightness < 0)
+            brightness = 0;
+        if (brightness > 255)
+            brightness = 255;
+        int r = (colour >> 16) & 0xff;
+        r = r * brightness / 255;
+        int g = (colour >> 8) & 0xff;
+        g = g * brightness / 255;
+        int b = colour & 0xff;
+        b = b * brightness / 255;
+
+        return (r <<16) | (g << 8) | b;
+    }
 }
