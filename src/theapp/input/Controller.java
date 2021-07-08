@@ -49,26 +49,9 @@ public class Controller {
         rotation += rotation2;
         rotation2 *= 0.8;
     }
-    public void update(int forward,
-                       int leftRight,
-                       int turnLeftRight){
+    public void update( int turnLeftRight){
         double rotationSpeed = 0.005;
-        double walkSpeed = 1;
-        double zMove = 0;
-        double xMove = 0;
-
-        zMove+= forward;
-        xMove+=leftRight;
         rotation2 -= rotationSpeed*turnLeftRight;
-
-
-        xx += ((xMove * Math.cos(rotation) + zMove * Math.sin((rotation) ))) * walkSpeed;
-        zz += ((zMove * Math.cos(rotation) - xMove * Math.sin((rotation) )) )* walkSpeed;
-        x += xx;
-        z += zz;
-
-        xx *= 0.1;
-        zz *= 0.1;
         rotation += rotation2;
         rotation2 *= 0.8;
     }

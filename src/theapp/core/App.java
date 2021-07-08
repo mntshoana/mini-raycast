@@ -52,6 +52,7 @@ public class App extends Canvas implements Runnable{
         long prevTime = System.nanoTime();
         int frameCount = 0;
         for (int i = 0; threadRunning ; i++) {
+            requestFocus();
             long currentTime = System.nanoTime();
             if (currentTime - prevTime > second) {
                 System.out.println(" [LOG] " + frameCount + " fps.");

@@ -38,7 +38,7 @@ public class RenderedObject {
 
         controller.update(forward, back, left, right, turnLeft, turnRight, sprint);
         controller.update(jump, crouch);
-        controller.update(0, 0, mouseX);
+        controller.update( mouseX);
         loader.run();
     }
 
