@@ -28,25 +28,6 @@ public class DisplayBuffer extends RenderedObject{
         parent.addFocusListener(input);
         parent.addMouseListener(input);
         parent.addMouseMotionListener(input);
-        /*testObject = new RenderedObject(320, 180); // fill left 400 pixels of the screen with random colors
-
-        testObject.load(()->{
-            // Fills testObject with random colors
-            Random random = new Random();
-            int rand = random.nextInt() * random.nextInt(5) / 4;
-            for (int j = 0; j < testObject.height; j++) {
-                for (int i = 0; i < testObject.width; i++){
-                    if (i % 2 == 0) // repeat value for 16 by 16 pixesl (just for the effect of enlarging a pixel )
-                        rand = random.nextInt() * random.nextInt(5) / 4;
-                    if (j % 3 == 0)
-                        testObject.displayMemory[i + (testObject.width * (j))] = rand;
-                    else {
-                        testObject.displayMemory[i + (testObject.width * (j))] = testObject.displayMemory[i + (testObject.width * (j - 1))];
-                        rand = random.nextInt();
-                    }
-                }
-            }
-        });*/
 
         roofFloor = new RenderedObject(App.width, App.height);
         roofFloor.load(()->{
@@ -64,7 +45,6 @@ public class DisplayBuffer extends RenderedObject{
                                            /*adjacent*/       /*opposite*/
                 double ceiling = ( y - object.height / 2.0)  / object.height;
                 // ceiling ranges from [-1/2 to 1/2) not including 1/2
-                // asuming this is the cotangent
 
                 double z; // positive, growing to infinity
                 double walkingBob = Math.sin(ticks / Math.PI);
@@ -86,12 +66,6 @@ public class DisplayBuffer extends RenderedObject{
                     double depth = (x - object.width / 2.0) / object.height;
                     // depth ranges from [-0.888888 to 0.8875]
                     depth = depth*z;
-
-                    // clip pixels towards the center that are too far
-                    //if (z > 400) {
-                        //testOImageFromCode.displayMemory[x + object.width * y] = 0;
-                      //  continue;
-                    //}
 
                     int xx = (int) ((depth * cos + z * sine)  + rightward) ;
                     int yy = (int) ((z * cos - depth * sine) + forward) ;
@@ -197,7 +171,7 @@ public class DisplayBuffer extends RenderedObject{
             }
         }
     }
-    
+
     // Renders everything to the screen
     public void update(){
         tick();
@@ -205,31 +179,15 @@ public class DisplayBuffer extends RenderedObject{
         for (int i = 0, len = App.width * App.height; i < len; i++)
             displayMemory[i] = 0;
 
-        // Redraw
         // Playing with background like image drawn from code
         draw(roofFloor, 0, 0);
         System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
-
         draw(walls, 0, 0);
-        /*
-        // Playing around with sin and cos of a circumference to create an animatioon
-        if (ticks % 200 == 0)
-            testObject.reload(input.keyPresses);
-
-        for (int i = 0; i < 2000; i+=70) {
-            int xAnimOffset = (int) (Math.sin(((System.currentTimeMillis()-i) % 5000.0 / 5000.0) * Math.PI * 2) * 250);
-            int yAnimOffset = (int) (Math.cos(((System.currentTimeMillis()-i) % 5000.0 / 5000.0) * Math.PI * 2) * 250);
-
-            draw(testObject, (App.width - testObject.width) / 2 + xAnimOffset, (App.height - testObject.height) / 2 - yAnimOffset);
-        }
-*/
     }
     private void tick(){
         input.captureCurrentMousePos();
         roofFloor.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         walls.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
-        //testObject.reload();
         ticks++;
-
     }
 }
