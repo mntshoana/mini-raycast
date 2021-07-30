@@ -9,11 +9,17 @@ import javax.swing.JFrame;
 import theapp.graphics.DisplayBuffer;
 
 public class App extends Canvas implements Runnable{
-    public static final int width = 1280;
-    public static final int height = 720;
+    public static final int width;
+    public static final int height;
+    static {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screeSize = toolkit.getScreenSize();
+        width = (int) ( screeSize.getWidth() * 0.80 );
+        height = (int) ( screeSize.getHeight() * 0.80 );
+    }
 
-    private Thread action;
-    private boolean threadRunning;
+    private Thread game;
+    private boolean gameRunning;
     private DisplayBuffer display;
 
     private BufferedImage bufferedImage, cursor;
@@ -51,7 +57,7 @@ public class App extends Canvas implements Runnable{
         final long second = 1000000000; // nano seconds per second
         long prevTime = System.nanoTime();
         int frameCount = 0;
-        for (int i = 0; threadRunning ; i++) {
+        for (int i = 0; gameRunning; i++) {
             requestFocus();
             long currentTime = System.nanoTime();
             if (currentTime - prevTime > second) {
@@ -66,12 +72,12 @@ public class App extends Canvas implements Runnable{
         System.out.println("Game reaches end.");
     }
     public void startGame() {
-        if (threadRunning)
+        if (gameRunning)
             return; // running just once for now
 
-        action = new Thread(this);
-        action.start();
-        threadRunning = true;
+        game = new Thread(this);
+        game.start();
+        gameRunning = true;
     }
 
     private void update(){
@@ -98,10 +104,10 @@ public class App extends Canvas implements Runnable{
     }
 
     public void stopGame(){
-        if (threadRunning == false)
+        if (gameRunning == false)
             return; // do nothing
         try {
-            action.join();
+            game.join();
         }
         catch (Exception e){
             System.out.println(" [Error] Failed to join thread.");

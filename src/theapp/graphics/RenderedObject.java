@@ -1,6 +1,5 @@
 package theapp.graphics;
 
-import theapp.core.App;
 import theapp.input.Controller;
 
 import java.awt.event.KeyEvent;
