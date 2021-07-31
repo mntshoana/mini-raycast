@@ -41,7 +41,7 @@ public class RenderedObject {
         loader.run();
     }
 
-    public int fade(int pixel, double z){
+    public static int fade(int pixel, double z){
         // Fade using gradient
         final double fadeDist = 8000.0;
         int colour = pixel;

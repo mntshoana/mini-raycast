@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
-import theapp.graphics.DisplayBuffer;
+import theapp.graphics.Renderer;
 
 public class App extends Canvas implements Runnable{
     public static final int width;
@@ -20,13 +20,12 @@ public class App extends Canvas implements Runnable{
 
     private Thread game;
     private boolean gameRunning;
-    private DisplayBuffer display;
 
-    private BufferedImage bufferedImage, cursor;
-    private DataBufferInt image;
+    private Renderer renderer;
+    private DataBufferInt displayBuf;
+
+    private BufferedImage mainView, cursorView;
     private BufferStrategy bufferStrategy;
-
-    private static final long uid = 1;
 
     private String fps = "";
     public App(){
@@ -40,15 +39,15 @@ public class App extends Canvas implements Runnable{
         frame.add(this);
         frame.setVisible(true);
 
-        bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        image = (DataBufferInt) bufferedImage.getRaster().getDataBuffer();
+        mainView = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        displayBuf = (DataBufferInt) mainView.getRaster().getDataBuffer();
 
-        // Change the cursor to not be visible
-        cursor = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), "blankCursor");
+        // Change the cursor - not to be visible
+        cursorView = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorView, new Point(0,0), "blankCursor");
         frame.getContentPane().setCursor(blankCursor);
 
-        display = new DisplayBuffer(width, height, this);
+        renderer = new Renderer(this);
     }
 
     public void run() {
@@ -56,18 +55,20 @@ public class App extends Canvas implements Runnable{
 
         final long second = 1000000000; // nano seconds per second
         long prevTime = System.nanoTime();
-        int frameCount = 0;
+
+        // Count frames and refresh screen
+        int frame = 0;
         for (int i = 0; gameRunning; i++) {
             requestFocus();
             long currentTime = System.nanoTime();
             if (currentTime - prevTime > second) {
-                System.out.println(" [LOG] " + frameCount + " fps.");
-                fps = frameCount + "FPS";
+                System.out.println(" [LOG] " + frame + " fps.");
+                fps = frame + "FPS";
                 prevTime += second;
-                frameCount = 0;
+                frame = 0; // reset
             }
             update();
-            frameCount++;
+            frame++;
         }
         System.out.println("Game reaches end.");
     }
@@ -87,20 +88,16 @@ public class App extends Canvas implements Runnable{
             return;
         }
 
-        display.update();
-        for (int i = 0; i < width * height; i++){
-            image.getData()[i] = display.displayMemory[i];
-        }
+        renderer.update();
+
         Graphics graphics = bufferStrategy.getDrawGraphics();
-        graphics.drawImage(bufferedImage, 0,0,width,height,null);
+        graphics.drawImage(mainView, 0,0,width,height,null);
         graphics.setColor(Color.WHITE);
         graphics.setFont(new Font("Akzidenz Grotesk", 0, 50));
         graphics.drawString(fps, 20, 50);
 
-
         graphics.dispose();
         bufferStrategy.show();
-
     }
 
     public void stopGame(){
@@ -115,10 +112,14 @@ public class App extends Canvas implements Runnable{
             System.exit(1);
         }
     }
-    public static void main(String[] args){
-        App app = new App(); // Soon to be graphics component
-        app.startGame();
 
+    public int[] getBuffer(){
+        return displayBuf.getData();
+    }
+    
+    public static void main(String[] args){
+        App mainApp = new App(); // Soon to be graphics component
+        mainApp.startGame();
         return;
     }
 }

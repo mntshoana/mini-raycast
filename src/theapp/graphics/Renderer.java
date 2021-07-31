@@ -7,7 +7,7 @@ import theapp.core.App;
 import theapp.input.Controller;
 import theapp.input.InputHandler;
 
-public class DisplayBuffer extends RenderedObject{
+public class Renderer {
 
     // just make 2 throw away test object
     private RenderedObject testObject;
@@ -20,9 +20,7 @@ public class DisplayBuffer extends RenderedObject{
     private long ticks;
 
     // Constructor
-    public DisplayBuffer(int width, int height, App parent){
-        super(width, height);
-
+    public Renderer(App parent){
         input = new InputHandler();
         this.parent = parent;
         parent.addKeyListener(input);
@@ -70,7 +68,7 @@ public class DisplayBuffer extends RenderedObject{
                     else
                         pixel = Texture.floor.displayMemory[(xx & 7) + (yy & 7) * 8 /*image has width of 8*/];
 
-                    object.displayMemory[x + object.width * y] = fade(pixel, z);
+                    object.displayMemory[x + object.width * y] = RenderedObject.fade(pixel, z);
                     //testOImageFromCode.displayMemory[x+ object.width*(y)] = pixel;
                 }
             }
@@ -144,7 +142,7 @@ public class DisplayBuffer extends RenderedObject{
                     int yTexture = (int)(8 * (y - yPixelTop) / (yPixelBottom - yPixelBottom));
                     int texture = xTexture * 100 + yTexture * 100 * 256;
                    // int z = (int) (1 / (txt0 + (txt1 - txt0) * pixelRotation * 8));
-                    walls.displayMemory[x+y*walls.width] = fade(texture,  zDistance - walls.controller.z); // color wall
+                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(texture,  zDistance - walls.controller.z); // color wall
                 }
             }
         });
@@ -174,7 +172,7 @@ public class DisplayBuffer extends RenderedObject{
 
                 int alpha = object.displayMemory[x + object.width*(y)]; // allow empty pixels to not be written which allows transparency
                 if (alpha > 0) {
-                    displayMemory[xPixel + this.width * (yPixel)]
+                    parent.getBuffer()[xPixel + App.width * (yPixel)]
                             = object.displayMemory[x + object.width * (y)];
                 }
             }
@@ -186,7 +184,7 @@ public class DisplayBuffer extends RenderedObject{
         tick();
         // Clear buffer
         for (int i = 0, len = App.width * App.height; i < len; i++)
-            displayMemory[i] = 0;
+            parent.getBuffer()[i] = 0;
 
         // Playing with background like image drawn from code
         draw(roofFloor, 0, 0);
