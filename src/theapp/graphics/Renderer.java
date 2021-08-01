@@ -19,6 +19,7 @@ public class Renderer {
     // a counter to help with color changes over time in a controlled way
     private long ticks;
 
+    private double walkingBob;
     // Constructor
     public Renderer(App parent){
         input = new InputHandler();
@@ -28,15 +29,16 @@ public class Renderer {
         parent.addMouseListener(input);
         parent.addMouseMotionListener(input);
 
+        walkingBob = getWalkingBob();
         roofFloor = new RenderedObject(App.width, App.height);
         roofFloor.load(()->{
-            RenderedObject object = roofFloor;
+            RenderedObject object = roofFloor; // like the 'this' pointer
             double floorDistance = 15;
             double ceilingDistance = 20;
-            double forward = object.controller.z ;
-            double rightward = object.controller.x;
-            double upward = object.controller.y;
-            double rotation = object.controller.rotation;
+            double forward = Controller.z ;
+            double rightward = Controller.x;
+            double upward = Controller.y;
+            double rotation = Controller.rotation;
             double cos = Math.cos(rotation);
             double sine = Math.sin(rotation);
 
@@ -46,7 +48,6 @@ public class Renderer {
 
                 double z; // 1 / ceiling, for ceiling >= 0 ranges from [2 to inf) positive 2, growing to height
                                                             //  and when ceiling is 0, z is infinity
-                double walkingBob = getWalkingBob(object.controller);
                 if (ceiling > 0)
                     z = (floorDistance + upward +walkingBob) /  ceiling; // scaled
                 else
@@ -77,22 +78,21 @@ public class Renderer {
         walls = new RenderedObject(App.width, App.height);
         walls.load(()->{
             Arrays.fill(walls.displayMemory, 0);
-            final double cos = Math.cos(roofFloor.controller.rotation);
-            final double sin = Math.sin(roofFloor.controller.rotation);
+            final double cos = Math.cos(Controller.rotation);
+            final double sin = Math.sin(Controller.rotation);
 
             double xLeft = 0;
             double xRight = 30;
             double zDistance = 200;
             double yHeight = 0;
-            double walkingBob = getWalkingBob(walls.controller);
 
-            double newXLeft = (xLeft/2.0 - walls.controller.x * 2.0625) * 2.0;
-            double newZDistance4L = (zDistance/2.0 - walls.controller.z  * 2.0625 ) *2.0;
+            double newXLeft = (xLeft/2.0 - Controller.x * 2.0625) * 2.0;
+            double newZDistance4L = (zDistance/2.0 - Controller.z  * 2.0625 ) *2.0;
             double rotationL = newXLeft * cos - newZDistance4L * sin;
             double rotationLZ = newZDistance4L * cos  + newXLeft * sin;
 
-            double newXRight = (xRight/2.0  - walls.controller.x * 2.0625) * 2.0;
-            double newZDistance4R = (zDistance/2.0 - walls.controller.z * 2.0625 ) *2.0;
+            double newXRight = (xRight/2.0  - Controller.x * 2.0625) * 2.0;
+            double newZDistance4R = (zDistance/2.0 - Controller.z * 2.0625 ) *2.0;
             double rotationR = newXRight * cos  - newZDistance4R * sin;
             double rotationRZ = newZDistance4R * cos  + newXRight * sin;
 
@@ -108,10 +108,10 @@ public class Renderer {
                 xPixelLeftInt = 0;
             if (xPixelRightInt > App.width)
                 xPixelRightInt = App.width;
-            double yTL = ((-yHeight) - (-walls.controller.y - walkingBob)*2.0625 ) * 2 ;
-            double yTR = ((-yHeight) - (-walls.controller.y - walkingBob)*2.0625 ) * 2 ;
-            double yBL = ((30 - yHeight) - (-walls.controller.y - walkingBob)*2.0625 )* 2 ;
-            double yBR = ((30 - yHeight) - (-walls.controller.y - walkingBob)*2.0625 )* 2 ;
+            double yTL = ((-yHeight) - (-Controller.y - walkingBob)*2.0625 ) * 2 ;
+            double yTR = ((-yHeight) - (-Controller.y - walkingBob)*2.0625 ) * 2 ;
+            double yBL = ((30 - yHeight) - (-Controller.y - walkingBob)*2.0625 )* 2 ;
+            double yBR = ((30 - yHeight) - (-Controller.y - walkingBob)*2.0625 )* 2 ;
 
             double yPixelTopL =    yTL / rotationLZ * App.height + App.height /2.0;
             double yPixelBottomL = yBL / rotationLZ * App.height + App.height /2.0;
@@ -142,21 +142,21 @@ public class Renderer {
                     int yTexture = (int)(8 * (y - yPixelTop) / (yPixelBottom - yPixelBottom));
                     int texture = xTexture * 100 + yTexture * 100 * 256;
                    // int z = (int) (1 / (txt0 + (txt1 - txt0) * pixelRotation * 8));
-                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(texture,  zDistance - walls.controller.z); // color wall
+                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(texture,  zDistance - Controller.z); // color wall
                 }
             }
         });
     }
 
-    public double getWalkingBob(Controller controller){
+    public double getWalkingBob(){
         double walkingBob = Math.sin(ticks / Math.PI);
-        if (!controller.moved)
+        if (!Controller.moved)
             walkingBob = 0.0;
-        else if (controller.crouched && controller.moved)
+        else if (Controller.crouched && Controller.moved)
             walkingBob = Math.sin(ticks / Math.PI /2) *  0.3;
-        else if (controller.moved && controller.sprint)
+        else if (Controller.moved && Controller.sprint)
             walkingBob *= Math.sin(ticks / Math.PI * 1.5) *  0.7;
-        else if (controller.moved)
+        else if (Controller.moved)
             walkingBob *= 0.5;
         return walkingBob;
     }
@@ -192,7 +192,9 @@ public class Renderer {
         draw(walls, 0, 0);
     }
     private void tick(){
+        walkingBob = getWalkingBob();
         input.captureCurrentMousePos();
+        Controller.onKey(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         roofFloor.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         walls.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         ticks++;

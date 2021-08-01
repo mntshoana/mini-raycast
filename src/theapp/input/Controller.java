@@ -1,25 +1,27 @@
 package theapp.input;
 
-public class Controller {
-    public double x, y,z;
-    public double xx, zz;
-    public double rotation;
-    public double rotation2;
+import java.awt.event.KeyEvent;
 
-    public boolean moved;
-    public boolean sprint;
-    public boolean jumped;
-    public boolean crouched;
-    private int jumpTime;
-    private boolean jumpPeak;
-    public void update(boolean forward, boolean back,
+public class Controller {
+    public static double x, y,z;
+    private static double xx, zz;
+    public static double rotation;
+    private static double rotation2;
+
+    public static boolean moved;
+    public static boolean sprint;
+    public static boolean jumped;
+    public static boolean crouched;
+    private static int jumpTime;
+    private static boolean jumpPeak;
+    private static void update(boolean forward, boolean back,
                        boolean left, boolean right,
                        boolean turnLeft, boolean turnRight, boolean sprint){
         double rotationSpeed = 0.005;
         double walkSpeed = 1;
         double zMove = 0;
         double xMove = 0;
-        this.sprint = sprint;
+        Controller.sprint = sprint;
         if (forward)
             zMove++;
         if (back)
@@ -50,13 +52,13 @@ public class Controller {
         rotation += rotation2;
         rotation2 *= 0.8;
     }
-    public void update( int turnLeftRight){
+    private static void update( int turnLeftRight){
         double rotationSpeed = 0.005;
         rotation2 -= rotationSpeed*turnLeftRight;
         rotation += rotation2;
         rotation2 *= 0.8;
     }
-    public void update(boolean jump, boolean crouch){
+    private static void update(boolean jump, boolean crouch){
         final double maxH = 15, minH = -10;
         double jumpIncrements = 0.5, crouchLevel = 2.5;
 
@@ -121,5 +123,23 @@ public class Controller {
         else if (!crouch && crouched){
             y += crouchLevel;
         }
+    }
+
+    public static void onKey(boolean[] keyPressed, int mouseX, int mouseY) {
+        boolean forward = keyPressed[KeyEvent.VK_W];
+        boolean back = keyPressed[KeyEvent.VK_S];
+        boolean left = keyPressed[KeyEvent.VK_A];
+        boolean right = keyPressed[KeyEvent.VK_D];
+        boolean turnLeft = keyPressed[KeyEvent.VK_LEFT];
+        boolean turnRight = keyPressed[KeyEvent.VK_RIGHT];
+
+        boolean jump = keyPressed[KeyEvent.VK_SPACE];
+
+        boolean crouch = keyPressed[KeyEvent.VK_CONTROL] || keyPressed[KeyEvent.VK_META];
+        boolean sprint = keyPressed[KeyEvent.VK_ALT];
+
+        update(forward, back, left, right, turnLeft, turnRight, sprint);
+        update(jump, crouch);
+        update(mouseX);
     }
 }
