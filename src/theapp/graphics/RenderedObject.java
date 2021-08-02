@@ -1,9 +1,5 @@
 package theapp.graphics;
 
-import theapp.input.Controller;
-
-import java.awt.event.KeyEvent;
-
 public class RenderedObject {
     private Runnable loader;// to hold the method that populats the object with a color maps
     protected final int width;

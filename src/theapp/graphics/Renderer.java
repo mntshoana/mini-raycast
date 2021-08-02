@@ -1,18 +1,13 @@
 package theapp.graphics;
 
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
-import java.util.Random;
 import theapp.core.App;
 import theapp.input.Controller;
 import theapp.input.InputHandler;
 
-import javax.naming.ldap.Control;
-
 public class Renderer {
 
     // just make 2 throw away test object
-    private RenderedObject testObject;
     private RenderedObject roofFloor;
     private RenderedObject walls;
 
@@ -72,7 +67,6 @@ public class Renderer {
                         pixel = Texture.floor.displayMemory[(xx & 7) + (yy & 7) * 8 /*image has width of 8*/];
 
                     object.displayMemory[x + object.width * y] = RenderedObject.fade(pixel, z);
-                    //testOImageFromCode.displayMemory[x+ object.width*(y)] = pixel;
                 }
             }
         });
