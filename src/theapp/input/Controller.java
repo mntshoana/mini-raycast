@@ -18,7 +18,7 @@ public class Controller {
                        boolean left, boolean right,
                        boolean turnLeft, boolean turnRight, boolean sprint){
         double rotationSpeed = 0.005;
-        double walkSpeed = 1;
+        double walkSpeed = 1.2;
         double zMove = 0;
         double xMove = 0;
         Controller.sprint = sprint;
@@ -39,9 +39,9 @@ public class Controller {
         moved = ((forward || back || left || right) && (!jumped));
 
         if (sprint)
-            walkSpeed = 1.6;
+            walkSpeed = 1.75;
         if (crouched)
-            walkSpeed = 0.5;
+            walkSpeed = 0.75;
         xx += ((xMove * Math.cos(rotation) + zMove * Math.sin((rotation) ))) * walkSpeed;
         zz += ((zMove * Math.cos(rotation) - xMove * Math.sin((rotation) )) )* walkSpeed;
         x += xx;
@@ -60,7 +60,7 @@ public class Controller {
     }
     private static void update(boolean jump, boolean crouch){
         final double maxH = 15, minH = -10;
-        double jumpIncrements = 0.5, crouchLevel = 2.5;
+        double jumpIncrements = 0.75, crouchLevel = 2.5;
 
         crouched = (y < 0) ? true: false;
         jumped = (y > 0 ) ? true: false;

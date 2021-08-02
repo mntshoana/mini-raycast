@@ -7,6 +7,8 @@ import theapp.core.App;
 import theapp.input.Controller;
 import theapp.input.InputHandler;
 
+import javax.naming.ldap.Control;
+
 public class Renderer {
 
     // just make 2 throw away test object
@@ -83,8 +85,8 @@ public class Renderer {
 
             double xLeft = 0;
             double xRight = 30;
-            double zDistance = 200;
-            double yHeight = 0;
+            double zDistance = 100;
+            double yHeight = -2;
 
             double newXLeft = (xLeft/2.0 - Controller.x * 2.0625) * 2.0;
             double newZDistance4L = (zDistance/2.0 - Controller.z  * 2.0625 ) *2.0;
@@ -121,7 +123,7 @@ public class Renderer {
             // conform to 8 by 8 textures
             double txt0 = 1 / rotationLZ;
             double txt1 = 1 / rotationRZ;
-            double txt2 = 0 / rotationLZ;
+            double txt2 = 1 / rotationLZ;
             double txt3 = 8 / rotationRZ - txt2;
 
             for (int x = xPixelLeftInt; x < xPixelRightInt; x++){
@@ -139,10 +141,10 @@ public class Renderer {
                     yPixelBottomInt = App.height;
 
                 for (int y = yPixelTopInt ; y < yPixelBottomInt; y++){
-                    int yTexture = (int)(8 * (y - yPixelTop) / (yPixelBottom - yPixelBottom));
-                    int texture = xTexture * 100 + yTexture * 100 * 256;
+                    int yTexture = (int)(8 * (y - yPixelTop) / (yPixelBottom - yPixelTop));
+                    int texture = (xTexture * 100 + yTexture * 100 ) * 256 ;
                    // int z = (int) (1 / (txt0 + (txt1 - txt0) * pixelRotation * 8));
-                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(texture,  zDistance - Controller.z); // color wall
+                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(texture,  1 / (txt0 + (txt1 - txt0) * pixelRotation)  / 4  ); // color wall
                 }
             }
         });
