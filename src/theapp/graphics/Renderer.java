@@ -92,6 +92,26 @@ public class Renderer {
             double rotationR = newXRight * cos  - newZDistance4R * sin;
             double rotationRZ = newZDistance4R * cos  + newXRight * sin;
 
+            // Cohen–Sutherland algorithm
+            final double clipWindow = 0.5;
+            double txt2Numerator = 0;
+            double txt3Numerator = 8;
+
+            if (rotationLZ < clipWindow && rotationRZ < clipWindow)
+                return;
+            if (rotationLZ < clipWindow){
+                double commonFactor = (clipWindow - rotationLZ) / (rotationRZ - rotationLZ);
+                rotationLZ = rotationLZ +  ( rotationRZ - rotationLZ) * commonFactor;
+                rotationL = rotationL +  ( rotationR - rotationL) * commonFactor;
+                txt2Numerator += (txt3Numerator - txt2Numerator) * commonFactor;
+            }
+            if (rotationRZ < clipWindow){
+                double commonFactor = (clipWindow - rotationLZ) / (rotationRZ - rotationLZ);
+                rotationRZ = rotationRZ +  ( rotationRZ - rotationLZ) * commonFactor;
+                rotationR = rotationR +  ( rotationR - rotationL) * commonFactor;
+                txt2Numerator += (txt3Numerator - txt2Numerator) * commonFactor;
+            }
+
             double xPixelLeft = (rotationL / rotationLZ * walls.height + walls.width / 2.0);
             double xPixelRight = (rotationR / rotationRZ * walls.height + walls.width / 2.0);
 
@@ -117,8 +137,8 @@ public class Renderer {
             // conform to 8 by 8 textures
             double txt0 = 1 / rotationLZ;
             double txt1 = 1 / rotationRZ;
-            double txt2 = 1 / rotationLZ;
-            double txt3 = 8 / rotationRZ - txt2;
+            double txt2 = txt2Numerator / rotationLZ;
+            double txt3 = txt3Numerator / rotationRZ - txt2;
 
             for (int x = xPixelLeftInt; x < xPixelRightInt; x++){
                 double pixelRotation = (x - xPixelLeft) / (xPixelRight - xPixelLeft);
