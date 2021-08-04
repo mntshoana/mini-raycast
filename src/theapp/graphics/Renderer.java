@@ -5,6 +5,8 @@ import theapp.core.App;
 import theapp.input.Controller;
 import theapp.input.InputHandler;
 
+import javax.naming.ldap.Control;
+
 public class Renderer {
 
     // just make 2 throw away test object
@@ -156,9 +158,10 @@ public class Renderer {
 
                 for (int y = yPixelTopInt ; y < yPixelBottomInt; y++){
                     int yTexture = (int)(8 * (y - yPixelTop) / (yPixelBottom - yPixelTop));
-                    int texture = (xTexture * 100 + yTexture * 100 ) * 256 ;
+                    //int texture = (xTexture * 100 + yTexture * 100 ) * 256 ;
+                    int pixel = Texture.wall.displayMemory[(xTexture & 7) + (yTexture & 7) * 8] ;
                    // int z = (int) (1 / (txt0 + (txt1 - txt0) * pixelRotation * 8));
-                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(texture,  1 / (txt0 + (txt1 - txt0) * pixelRotation)  / 4  ); // color wall
+                    walls.displayMemory[x+y*walls.width] = RenderedObject.fade(pixel,  1 / (txt0 + ( txt1 - txt0) * pixelRotation)  / 4  ); // color wall
                 }
             }
         });
