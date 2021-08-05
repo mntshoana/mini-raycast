@@ -14,8 +14,8 @@ public class App extends Canvas implements Runnable{
     static {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screeSize = toolkit.getScreenSize();
-        width = (int) ( screeSize.getWidth() * 0.80 );
-        height = (int) ( screeSize.getHeight() * 0.80 );
+        width = (int) ( screeSize.getWidth() * 0.50 );
+        height = (int) ( screeSize.getHeight() * 0.50 );
     }
 
     private Thread game;
