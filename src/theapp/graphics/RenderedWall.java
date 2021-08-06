@@ -8,15 +8,17 @@ import java.util.Arrays;
 public class RenderedWall extends RenderedObject{
     private double xLeft;
     private double xRight;
-    private double zDistance;
+    private double zLeft;
+    private double zRight;
     private double elevatedHeight;
     private double yHeight;
 
-    public RenderedWall(double left, double right, double z, double elevHeight, double height) {
+    public RenderedWall(double left, double right, double zLeft, double zRight, double elevHeight, double height) {
         super(App.width, App.height);
         xLeft = left;
         xRight = right;
-        zDistance = z;
+        this.zLeft = zLeft;
+        this.zRight = zRight;
         elevatedHeight = elevHeight;
         yHeight = height;
         load(() -> init());
@@ -30,12 +32,12 @@ public class RenderedWall extends RenderedObject{
 
         double correction = 2.0;
         double newXLeft = (xLeft/2.0 - Controller.x * correction) * 2.0;
-        double newZDistance4L = (zDistance/2.0 - Controller.z  * correction) *2.0;
+        double newZDistance4L = (zLeft/2.0 - Controller.z  * correction) *2.0;
         double rotationL = newXLeft * cos - newZDistance4L * sin;
         double rotationLZ = newZDistance4L * cos  + newXLeft * sin;
 
         double newXRight = (xRight/2.0  - Controller.x * correction) * 2.0;
-        double newZDistance4R = (zDistance/2.0 - Controller.z * correction) *2.0;
+        double newZDistance4R = (zRight/2.0 - Controller.z * correction) *2.0;
         double rotationR = newXRight * cos  - newZDistance4R * sin;
         double rotationRZ = newZDistance4R * cos  + newXRight * sin;
 
@@ -50,13 +52,13 @@ public class RenderedWall extends RenderedObject{
             double commonFactor = (clipWindow - rotationLZ) / (rotationRZ - rotationLZ);
             rotationLZ = rotationLZ +  ( rotationRZ - rotationLZ) * commonFactor;
             rotationL = rotationL +  ( rotationR - rotationL) * commonFactor;
-            txt2Numerator += (txt3Numerator - txt2Numerator) * commonFactor;
+            txt2Numerator = txt2Numerator + (txt3Numerator - txt2Numerator) * commonFactor;
         }
         if (rotationRZ < clipWindow){
             double commonFactor = (clipWindow - rotationLZ) / (rotationRZ - rotationLZ);
-            rotationRZ = rotationRZ +  ( rotationRZ - rotationLZ) * commonFactor;
-            rotationR = rotationR +  ( rotationR - rotationL) * commonFactor;
-            txt3Numerator += (txt3Numerator - txt2Numerator) * commonFactor;
+            rotationRZ = rotationLZ +  ( rotationRZ - rotationLZ) * commonFactor;
+            rotationR = rotationL +  ( rotationR - rotationL) * commonFactor;
+            txt3Numerator = txt2Numerator + (txt3Numerator - txt2Numerator) * commonFactor;
         }
 
         double xPixelLeft = (rotationL / rotationLZ * height + width / 2.0);
@@ -109,5 +111,14 @@ public class RenderedWall extends RenderedObject{
                 displayMemory[x+y*width] = RenderedObject.fade(pixel,  1 / (txt0 + ( txt1 - txt0) * pixelRotation)  / 4  ); // color wall
             }
         }
+    }
+    public void reconf(double left, double right, double zLeft, double zRight, double elevHeight, double height){
+        xLeft = left;
+        xRight = right;
+        this.zLeft = zLeft;
+        this.zRight = zRight;
+        elevatedHeight = elevHeight;
+        yHeight = height;
+        init();
     }
 }

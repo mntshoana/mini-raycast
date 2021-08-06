@@ -1,6 +1,5 @@
 package theapp.graphics;
 
-import java.util.Arrays;
 import theapp.core.App;
 import theapp.input.Controller;
 import theapp.input.InputHandler;
@@ -9,7 +8,6 @@ public class Renderer {
 
     // just make 2 throw away test object
     private RenderedScene scene;
-    private RenderedWall[] walls;
 
     private InputHandler input;
     private App parent;
@@ -29,9 +27,7 @@ public class Renderer {
 
         updateWalkingBob();
         scene = new RenderedScene();
-        walls = new RenderedWall[4];
-        for (int i = 0; i < 4; i++)
-            walls[i] = new RenderedWall((i > 1)? 0 : 30, (i > 1)? 30 : 60, 100, (i % 2 == 0) ? 0 : 15, 15);
+
     }
 
     private void updateWalkingBob(){
@@ -77,16 +73,13 @@ public class Renderer {
         // Playing with background like image drawn from code
         draw(scene, 0, 0);
         System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
-        for (RenderedWall wall : walls)
-            draw(wall, 0, 0);
     }
     private void tick(){
         walkingBob = getWalkingBob();
         input.captureCurrentMousePos();
         Controller.onKey(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         scene.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
-        for (RenderedWall wall : walls)
-            wall.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
+        //wall.reload(input.keyPresses, input.MouseXDiff, input.MouseYDiff);
         ticks++;
     }
 }
