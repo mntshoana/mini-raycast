@@ -3,11 +3,13 @@ package theapp.graphics;
 import theapp.core.App;
 import theapp.input.Controller;
 import theapp.input.InputHandler;
+import theapp.level.RandomMaize;
 
 public class Renderer {
 
     // just make 2 throw away test object
     private RenderedScene scene;
+    private RandomMaize level;
 
     private InputHandler input;
     private App parent;
@@ -27,7 +29,7 @@ public class Renderer {
 
         updateWalkingBob();
         scene = new RenderedScene();
-
+        level = new RandomMaize(160, 160, this);
     }
 
     private void updateWalkingBob(){
@@ -73,6 +75,7 @@ public class Renderer {
         // Playing with background like image drawn from code
         draw(scene, 0, 0);
         System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
+        level.draw();
     }
     private void tick(){
         walkingBob = getWalkingBob();
