@@ -71,17 +71,17 @@ public class RenderedWall extends RenderedObject{
         int xPixelRightInt = (int) xPixelRight;
         if (xPixelLeftInt < 0 )
             xPixelLeftInt = 0;
-        if (xPixelRightInt > App.width)
-            xPixelRightInt = App.width;
+        if (xPixelRightInt > width)
+            xPixelRightInt = width;
         double yTL = ((-elevatedHeight) - (-Controller.y - walkingBob) * correction) * 2;
         double yTR = ((-elevatedHeight) - (-Controller.y - walkingBob) * correction) * 2;
         double yBL = ((yHeight - elevatedHeight) - (-Controller.y - walkingBob) * correction)* 2;
         double yBR = ((yHeight - elevatedHeight) - (-Controller.y - walkingBob) * correction)* 2 ;
 
-        double yPixelTopL =    (yTL +15 * correction) / rotationLZ * App.height + App.height /2.0;
-        double yPixelBottomL = (yBL +15* correction) / rotationLZ * App.height + App.height /2.0;
-        double yPixelTopR =    (yTR +15* correction) / rotationRZ * App.height + App.height /2.0;
-        double yPixelBottomR = (yBR +15* correction) / rotationRZ * App.height + App.height /2.0;
+        double yPixelTopL =    (yTL +15 * correction) / rotationLZ * height + height /2.0;
+        double yPixelBottomL = (yBL +15* correction) / rotationLZ * height + height /2.0;
+        double yPixelTopR =    (yTR +15* correction) / rotationRZ * height + height /2.0;
+        double yPixelBottomR = (yBR +15* correction) / rotationRZ * height + height /2.0;
 
         // conform to 8 by 8 textures
         double txt0 = 1 / rotationLZ;
@@ -100,8 +100,8 @@ public class RenderedWall extends RenderedObject{
             int xTexture = (int) ((txt2 + txt3 * pixelRotation) / (txt0 + (txt1 - txt0) * pixelRotation));
             if (yPixelTopInt < 0)
                 yPixelTopInt = 0;
-            if (yPixelBottomInt > App.height)
-                yPixelBottomInt = App.height;
+            if (yPixelBottomInt > height)
+                yPixelBottomInt = height;
 
             for (int y = yPixelTopInt ; y < yPixelBottomInt; y++){
                 int yTexture = (int)(8 * (y - yPixelTop) / (yPixelBottom - yPixelTop));

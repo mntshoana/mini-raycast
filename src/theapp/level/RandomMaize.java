@@ -33,59 +33,29 @@ public class RandomMaize {
                 }
             }
         }
-
     }
 
     private boolean checkBlock(int x, int y) {
         return x >= 0 && y >= 0 && x < this.width && y < this.height ? this.solidBlocks[x + y * this.width] : true;
     }
 
+    private void extendWall(int xLeft, int xRight, int zLeft, int zRight){
+        wall.reconf( 20* xLeft, 20 * xRight, 20 * zLeft, 20 * zRight, -5, 10);
+        renderer.draw(wall, 0, 0);
+    }
     public void draw() {
-        int size = 5;
-
-        for(int x = -size; x < size; ++x) {
-            for(int z = -size; z < size; ++z) {
-                int w = 30;
-                if (w < this.width) {
-                    w = this.width;
-                }
-
-                int xLeft;
-                int xRight;
-                int zLeft;
-                int zRight;
+        for(int x = -1; x < width+1; ++x) {
+            for(int z = -1; z < height+1; ++z) {
                 if (this.checkBlock(x, z)) {
-                    if (!this.checkBlock(x + 1, z)) {
-                        xLeft = xRight = (x + 1) * w;
-                        zLeft = z * w;
-                        zRight = (z + 1) * w;
-                        this.wall.reconf((double)xLeft, (double)xRight, (double)zLeft, (double)zRight, 0.0D, 15.0D);
-                        this.renderer.draw(this.wall, 0, 0);
-                    }
-
-                    if (!this.checkBlock(x, z + 1)) {
-                        xLeft = (x + 1) * w;
-                        xRight = x * w;
-                        zLeft = zRight = (z + 1) * w;
-                        this.wall.reconf((double)xLeft, (double)xRight, (double)zLeft, (double)zRight, 0.0D, 15.0D);
-                        this.renderer.draw(this.wall, 0, 0);
-                    }
+                    if (!this.checkBlock(x + 1, z)) // east
+                        extendWall(x + 1, x + 1, z, z+1);
+                    if (!this.checkBlock(x, z + 1)) // south
+                        extendWall(x + 1, x, z+1, z+1);
                 } else {
-                    if (this.checkBlock(x + 1, z)) {
-                        xLeft = xRight = (x + 1) * w;
-                        zLeft = (z + 1) * w;
-                        zRight = z + 1 * w;
-                        this.wall.reconf((double)xLeft, (double)xRight, (double)zLeft, (double)zRight, 0.0D, 15.0D);
-                        this.renderer.draw(this.wall, 0, 0);
-                    }
-
-                    if (this.checkBlock(x, z + 1)) {
-                        xLeft = x * w;
-                        xRight = (x + 1) * w;
-                        zLeft = zRight = (z + 1) * w;
-                        this.wall.reconf((double)xLeft, (double)xRight, (double)zLeft, (double)zRight, 0.0D, 15.0D);
-                        this.renderer.draw(this.wall, 0, 0);
-                    }
+                    if (this.checkBlock(x + 1, z)) // east
+                        extendWall(x+1, x+1, z+1, z);
+                    if (this.checkBlock(x, z + 1)) // south
+                        extendWall(x, x+1, z+1, z+1);
                 }
             }
         }
