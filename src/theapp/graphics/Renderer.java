@@ -46,6 +46,7 @@ public class Renderer {
     public static double getWalkingBob(){
         return walkingBob;
     }
+    public int[] getBuffer(){return parent.getBuffer();}
     public void draw(RenderedObject object, int xOffset, int yOffset){
         for (int y = 0; y < object.height; y++){
             int yPixel = y + yOffset;

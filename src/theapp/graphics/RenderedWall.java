@@ -21,11 +21,19 @@ public class RenderedWall extends RenderedObject{
         this.zRight = zRight;
         elevatedHeight = elevHeight;
         yHeight = height;
-        load(() -> init());
+        this.loader = () -> {
+                Arrays.fill(displayMemory, 0);
+                init();
+            };
+    }
+
+    public RenderedWall(int[] existingArr){
+        super(existingArr); // must not clear this as it belongs to a different class
+        xLeft = xRight = zLeft = zRight = elevatedHeight = yHeight = 0;
+        this.loader = () -> init();
     }
 
     private void init(){
-        Arrays.fill(displayMemory, 0);
         double walkingBob = Renderer.getWalkingBob();
         final double cos = Math.cos(Controller.rotation);
         final double sin = Math.sin(Controller.rotation);
@@ -119,6 +127,6 @@ public class RenderedWall extends RenderedObject{
         this.zRight = zRight;
         elevatedHeight = elevHeight;
         yHeight = height;
-        init();
+        loader.run();
     }
 }

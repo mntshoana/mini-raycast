@@ -1,7 +1,9 @@
 package theapp.graphics;
 
+import theapp.core.App;
+
 public class RenderedObject {
-    private Runnable loader;// to hold the method that populats the object with a color maps
+    protected Runnable loader;// to hold the method that populats the object with a color maps
     protected final int width;
     protected final int height;
     public final int[] displayMemory;
@@ -10,6 +12,11 @@ public class RenderedObject {
         this.width = width;
         this.height = height;
         this.displayMemory = new int[width * height];
+    }
+    public RenderedObject(int[] existingArr){
+        width = App.width;
+        height = App.height;
+        displayMemory = existingArr;
     }
 
     public void load(Runnable method){

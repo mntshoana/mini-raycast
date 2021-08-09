@@ -21,7 +21,7 @@ public class RandomMaize {
         this.height = height;
         this.renderer = renderer;
         this.solidBlocks = new boolean[width * height];
-        this.wall = new RenderedWall(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+        this.wall = new RenderedWall(renderer.getBuffer());
         Random random = new Random();
 
         for(int y = 0; y < height; ++y) {
@@ -41,7 +41,7 @@ public class RandomMaize {
 
     private void extendWall(int xLeft, int xRight, int zLeft, int zRight){
         wall.reconf( 20* xLeft, 20 * xRight, 20 * zLeft, 20 * zRight, -5, 10);
-        renderer.draw(wall, 0, 0);
+        // no need to call draw method of renderer
     }
     public void draw() {
         for(int x = -1; x < width+1; ++x) {
