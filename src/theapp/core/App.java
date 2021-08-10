@@ -118,6 +118,14 @@ public class App extends Canvas implements Runnable{
     }
     
     public static void main(String[] args){
+        Launcher app = new Launcher();
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        app.dispose();
         App mainApp = new App(); // Soon to be graphics component
         mainApp.startGame();
         return;

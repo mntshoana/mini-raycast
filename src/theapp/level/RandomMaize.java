@@ -40,7 +40,7 @@ public class RandomMaize {
     }
 
     private void extendWall(int xLeft, int xRight, int zLeft, int zRight){
-        wall.reconf( 20* xLeft, 20 * xRight, 20 * zLeft, 20 * zRight, -5, 10);
+        wall.reconf( 40* xLeft, 40 * xRight, 40 * zLeft, 40 * zRight, 5 , 20);
         // no need to call draw method of renderer
     }
     public void draw() {

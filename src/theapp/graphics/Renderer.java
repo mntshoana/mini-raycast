@@ -29,7 +29,7 @@ public class Renderer {
 
         updateWalkingBob();
         scene = new RenderedScene();
-        level = new RandomMaize(5, 5, this);
+        level = new RandomMaize(10  , 10, this);
     }
 
     private void updateWalkingBob(){
