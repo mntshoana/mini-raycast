@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 import theapp.graphics.Renderer;
 
 public class App extends Canvas implements Runnable{
-    public static final int width;
-    public static final int height;
+    public static int width;
+    public static int height;
     static {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screeSize = toolkit.getScreenSize();
