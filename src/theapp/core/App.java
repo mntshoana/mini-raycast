@@ -14,8 +14,13 @@ public class App extends Canvas implements Runnable{
     static {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screeSize = toolkit.getScreenSize();
-        width = (int) ( screeSize.getWidth() * 0.50 );
-        height = (int) ( screeSize.getHeight() * 0.50 );
+        try {
+            width = Config.load("width");
+            height = Config.load("height");
+        } catch (NoSuchFieldException e){
+            width = (int) ( screeSize.getWidth() * 0.50);
+            height = (int) ( screeSize.getHeight() * 0.50 );
+        }
     }
 
     private Thread game;

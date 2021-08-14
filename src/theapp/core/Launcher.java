@@ -66,14 +66,14 @@ class SettingsLauncher extends Launcher{
         lblResolution.setBounds(50, 80, 80, 20);
         window.add(lblResolution);
 
-        Choice dropDownRes = new Choice();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screeSize = toolkit.getScreenSize();
         int tempWidth = (int) ( screeSize.getWidth());
-        int tempHeight = (int) ( screeSize.getHeight());
+
+        Choice dropDownRes = new Choice();
         dropDownRes.setBounds(150, 80, 150, 20);
-        if (480 <= tempWidth) dropDownRes.add("480 x 360");
-        if (640 <= tempWidth) dropDownRes.add("640 x 480");
+        dropDownRes.add("480 x 360");
+        dropDownRes.add("640 x 480");
         if (800 <= tempWidth) dropDownRes.add("800 x 600");
         if (960 <= tempWidth) dropDownRes.add("960 x 720");
         if (1024 <= tempWidth) dropDownRes.add("1024 x 768");
@@ -84,7 +84,13 @@ class SettingsLauncher extends Launcher{
         if (1856 <= tempWidth) dropDownRes.add("1856 x 1392");
         if (1920 <= tempWidth) dropDownRes.add("1920 x 1440");
         if (2048 <= tempWidth) dropDownRes.add("2048 x 1536");
-        dropDownRes.select(1);
+        final int defaultSelection = 1;
+        try {
+            int index = Config.load("resolutionId");
+            dropDownRes.select(index);
+        } catch (NoSuchFieldException e){
+            dropDownRes.select(defaultSelection);
+        }
         window.add(dropDownRes);
 
         JButton btnCancel = new JButton("Cancel");
@@ -107,6 +113,9 @@ class SettingsLauncher extends Launcher{
                 final String[] dimension = str.replaceAll(" ", "").split("[x]");
                 App.width = Integer.parseInt(dimension[0]);
                 App.height = Integer.parseInt(dimension[1]);
+                Config.save("width", App.width);
+                Config.save("height", App.height);
+                Config.save("resolutionId", dropDownRes.getSelectedIndex(), "Resolution");
                 dispose();
                 new Launcher("Game Launcher", 500, 500);
             }
