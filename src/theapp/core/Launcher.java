@@ -18,6 +18,7 @@ public class Launcher extends JFrame {
     protected int width;
     protected int height;
     public Launcher (String title, int width, int height){
+        setUndecorated(true);
         setTitle(title);
         this.width = width;
         this.height = height;
@@ -32,7 +33,7 @@ public class Launcher extends JFrame {
     }
     protected void createComponents(){
         JButton btnPlay = new JButton("Play");
-        btnPlay.setBounds(width/2 - 40, height/2 - 40 -30, 80, 40);
+        btnPlay.setBounds(width/2 - 40,  height- height* 7/10, 80, 40);
         btnPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,8 +41,10 @@ public class Launcher extends JFrame {
                 new App().startGame();
             }
         });
+        window.add(btnPlay);
+
         JButton btnOptions = new JButton("Options");
-        btnOptions.setBounds(width/2 - 40, height /2 - 40 + 30, 80, 40);
+        btnOptions.setBounds(width/2 - 40,   height- height* 5/10, 80, 40);
         btnOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,8 +52,18 @@ public class Launcher extends JFrame {
                 new SettingsLauncher("Launcher - Options");
             }
         });
-        window.add(btnPlay);
         window.add(btnOptions);
+
+        JButton btnExit = new JButton("Exit");
+        btnExit.setBounds(width/2 - 40,  height- height* 3/10 , 80, 40);
+        btnExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(" [LOG] Exitting.");
+                System.exit(0);
+            }
+        });
+        window.add(btnExit);
     }
 }
 
@@ -117,7 +130,7 @@ class SettingsLauncher extends Launcher{
                 Config.save("height", App.height);
                 Config.save("resolutionId", dropDownRes.getSelectedIndex(), "Resolution");
                 dispose();
-                new Launcher("Game Launcher", 500, 500);
+                new Launcher("Game Launcher", 800, 400);
             }
         });
         window.add(btnOK);

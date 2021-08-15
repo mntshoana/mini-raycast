@@ -123,7 +123,7 @@ public class App extends Canvas implements Runnable{
     }
     
     public static void main(String[] args){
-        Launcher app = new Launcher("Game Launcher", 500, 500);
+        Launcher app = new Launcher("Game Launcher", 800, 400);
         return;
     }
 }
