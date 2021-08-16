@@ -1,9 +1,11 @@
 package theapp.core;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JFrame;
 
 public class Launcher extends JFrame {
@@ -14,26 +16,52 @@ public class Launcher extends JFrame {
             e.printStackTrace();
         }
     }
-    protected JPanel window = new JPanel();
+    protected JPanel window;
     protected int width;
     protected int height;
+
     public Launcher (String title, int width, int height){
         setUndecorated(true);
+
         setTitle(title);
         this.width = width;
         this.height = height;
         setSize(new Dimension(width, height));
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+
+        // creeate JPanel for Launcher
+        if (this.getClass() == Launcher.class){
+            window  = new JPanel(){
+                private Image image;
+                {
+                    try {
+                        image = ImageIO.read(Launcher.class.getResourceAsStream("/launcher.jpg"));
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void paintComponent(Graphics graphics) {
+                    graphics.setColor(Color.BLACK);
+                    graphics.fillRect(0,0,width, height);
+                    graphics.drawImage(image, 0, 0, width, height, null);
+                }
+            };
+        }
+        else // create JPanel for subclasses
+            window = new JPanel();
         window.setLayout(null);
-        getContentPane().add(window);
+        setContentPane(window);
         createComponents();
         setVisible(true);
     }
     protected void createComponents(){
+        getBackground();
         JButton btnPlay = new JButton("Play");
-        btnPlay.setBounds(width/2 - 40,  height- height* 7/10, 80, 40);
+        btnPlay.setBounds(width*4/5,  height- height* 7/10, 80, 40);
         btnPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -44,7 +72,7 @@ public class Launcher extends JFrame {
         window.add(btnPlay);
 
         JButton btnOptions = new JButton("Options");
-        btnOptions.setBounds(width/2 - 40,   height- height* 5/10, 80, 40);
+        btnOptions.setBounds(width*4/5,   height- height* 5/10, 80, 40);
         btnOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -55,7 +83,7 @@ public class Launcher extends JFrame {
         window.add(btnOptions);
 
         JButton btnExit = new JButton("Exit");
-        btnExit.setBounds(width/2 - 40,  height- height* 3/10 , 80, 40);
+        btnExit.setBounds(width*4/5,  height- height* 3/10 , 80, 40);
         btnExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
