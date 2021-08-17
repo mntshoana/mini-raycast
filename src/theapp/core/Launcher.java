@@ -1,5 +1,7 @@
 package theapp.core;
 
+import theapp.input.InputHandler;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.JFrame;
 
-public class Launcher extends JFrame {
+public class Launcher extends JFrame implements Runnable {
     static {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -17,10 +19,20 @@ public class Launcher extends JFrame {
         }
     }
     protected JPanel window;
+    protected InputHandler input;
     protected int width;
     protected int height;
+    protected Thread thread;
+    boolean running = false;
 
     public Launcher (String title, int width, int height){
+        input = new InputHandler();
+
+        addKeyListener(input);
+        addFocusListener(input);
+        addMouseListener(input);
+        addMouseMotionListener(input);
+
         setUndecorated(true);
 
         setTitle(title);
@@ -57,6 +69,42 @@ public class Launcher extends JFrame {
         setContentPane(window);
         createComponents();
         setVisible(true);
+        runMe();
+    }
+    public void runMe(){
+        running = true;
+        thread = new Thread(this, "Launcher");
+        thread.start();
+    }
+    public void stopMe(){
+        running = false;
+        try {
+            thread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+    public void update(){
+        if (input.Mousedragged == true){
+            int newX = getX() + input.MouseXDiff;
+            int newY = getY() + input.MouseYDiff;
+            System.out.println("[LOG] Mouse press x: " + input.MousePressX + " y: " + input.MousePressY );
+            System.out.println("[LOG] Last mouse press x: " + input.lastMouseX + " y: " + input.lastMouseY );
+            System.out.println("[LOG] Mouse diff x: " + input.MouseXDiff + " y: " + input.MouseYDiff );
+            System.out.println("[LOG] Location before: " + getX() + ", " + getY() + " and after: " + newX + ", " + newY);
+            input.lastAcceptedPress(input.MouseXDiff, input.MouseYDiff);
+            setLocation(newX, newY);
+        }
+    }
+    public void run (){
+        while (running){
+            update();
+            try {
+                Thread.sleep(1000 / 50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
     protected void createComponents(){
         getBackground();
@@ -65,6 +113,7 @@ public class Launcher extends JFrame {
         btnPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                stopMe();
                 dispose();
                 new App().startGame();
             }
@@ -76,6 +125,7 @@ public class Launcher extends JFrame {
         btnOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                stopMe();
                 dispose();
                 new SettingsLauncher("Launcher - Options");
             }
@@ -139,8 +189,9 @@ class SettingsLauncher extends Launcher{
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                stopMe();
                 dispose();
-                new Launcher("Game Launcher", 500, 500);
+                new Launcher("Game Launcher", 800, 400);
             }
         });
         window.add(btnCancel);
@@ -157,6 +208,7 @@ class SettingsLauncher extends Launcher{
                 Config.save("width", App.width);
                 Config.save("height", App.height);
                 Config.save("resolutionId", dropDownRes.getSelectedIndex(), "Resolution");
+                stopMe();
                 dispose();
                 new Launcher("Game Launcher", 800, 400);
             }

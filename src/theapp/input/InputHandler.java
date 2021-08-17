@@ -5,7 +5,9 @@ import java.awt.event.*;
 public class InputHandler implements KeyListener, FocusListener, MouseListener, MouseMotionListener {
     public boolean[] keyPresses = new boolean[68836];
     public int MouseX, MouseY;
-    private int lastMouseX, lastMouseY;
+    public int MousePressX, MousePressY;
+    public boolean Mousedragged;
+    public int lastMouseX = -1, lastMouseY = -1;
     public int MouseXDiff, MouseYDiff;
     @Override
     public void keyTyped(KeyEvent e) {
@@ -41,10 +43,25 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e) {
+        MousePressX = e.getX();
+        MousePressY = e.getY();
+        if (!Mousedragged){
+            lastMouseX = MousePressX;
+            lastMouseY = MousePressY;
+        }
+        Mousedragged = true;
+    }
+    public void lastAcceptedPress(int lastXDiff, int lastYDiff){
+        if (!Mousedragged) return;
+
+        MouseXDiff = MousePressX - lastMouseX;
+        MouseYDiff =  MousePressY - lastMouseY;
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        Mousedragged = false;
     }
 
     @Override
@@ -57,6 +74,11 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        MousePressX  = e.getX();
+        MousePressY  = e.getY();
+
+        MouseXDiff = (MousePressX - lastMouseX);
+        MouseYDiff = (MousePressY - lastMouseY);
     }
 
     @Override
