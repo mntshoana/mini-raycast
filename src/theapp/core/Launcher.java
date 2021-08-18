@@ -27,7 +27,6 @@ public class Launcher extends JFrame implements Runnable {
 
     public Launcher (String title, int width, int height){
         input = new InputHandler();
-
         addKeyListener(input);
         addFocusListener(input);
         addMouseListener(input);
@@ -39,27 +38,71 @@ public class Launcher extends JFrame implements Runnable {
         this.width = width;
         this.height = height;
         setSize(new Dimension(width, height));
-
+        if (this.getClass() == Launcher.class)
+            setBackground(Color.BLACK);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
         // creeate JPanel for Launcher
-        if (this.getClass() == Launcher.class){
-            window  = new JPanel(){
+        if (this.getClass() == Launcher.class) {
+            window = new JPanel() {
                 private Image image;
+                private Image btnPlayOn, btnPlayOff;
+                private Image btnOptionsOn, btnOptionsOff;
+                private Image btnExitOn, btnExitOff;
+
                 {
                     try {
-                        image = ImageIO.read(Launcher.class.getResourceAsStream("/launcher.jpg"));
-                    }catch (IOException e){
+                        image = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnPlayOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnPlayOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnOptionsOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnOptionsOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnExitOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnExitOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+
                 @Override
                 public void paintComponent(Graphics graphics) {
                     graphics.setColor(Color.BLACK);
-                    graphics.fillRect(0,0,width, height);
+                    graphics.fillRect(0, 0, width, height);
                     graphics.drawImage(image, 0, 0, width, height, null);
+                    drawButtons();
+                }
+
+                public void drawButtons(){
+                    drawButton(btnPlayOn, btnPlayOff, width * 4 / 5, height - height * 7 / 10, 80, 40, () -> play());
+                    drawButton(btnOptionsOn, btnOptionsOff, width * 4 / 5, height - height * 5 / 10, 80, 40, () -> options());
+                    drawButton(btnExitOn, btnExitOff, width * 4 / 5, height - height * 3 / 10, 80, 40, () -> exit());
+                }
+                public void drawButton(Image buttonOn, Image buttonOff, int x, int y, int width, int height, Runnable onClick) {
+                    Graphics graphics = getGraphics();
+                    if (input.MouseX > x && input.MouseX < x + width && input.MouseY > y && input.MouseY < y + height){
+                        graphics.drawImage(buttonOn, x, y, width, height, null);
+                        if (input.Mousedragged)
+                            onClick.run();
+                    }
+                    else
+                        graphics.drawImage(buttonOff, x, y, width, height, null);
+                    return;
+                }
+
+                private void play() {
+                    new App().startGame();
+                    stopMe();
+                }
+                private void options() {
+                    new SettingsLauncher("Launcher - Options");
+                    stopMe();
+                }
+                private void exit(){
+                    System.out.println(" [LOG] Exitting.");
+                    System.exit(0);
                 }
             };
         }
@@ -75,17 +118,27 @@ public class Launcher extends JFrame implements Runnable {
         running = true;
         thread = new Thread(this, "Launcher");
         thread.start();
+
     }
     public void stopMe(){
         running = false;
+        this.dispose();
         try {
             thread.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
+
     }
     public void update(){
-        if (input.Mousedragged == true){
+        if (this.getClass() == Launcher.class) {
+            try {
+                window.getClass().getDeclaredMethod("drawButtons").invoke(window);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (input.Mousedragged == true && running == true){
             int newX = getX() + input.MouseXDiff;
             int newY = getY() + input.MouseYDiff;
             System.out.println("[LOG] Mouse press x: " + input.MousePressX + " y: " + input.MousePressY );
@@ -107,41 +160,7 @@ public class Launcher extends JFrame implements Runnable {
         }
     }
     protected void createComponents(){
-        getBackground();
-        JButton btnPlay = new JButton("Play");
-        btnPlay.setBounds(width*4/5,  height- height* 7/10, 80, 40);
-        btnPlay.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopMe();
-                dispose();
-                new App().startGame();
-            }
-        });
-        window.add(btnPlay);
-
-        JButton btnOptions = new JButton("Options");
-        btnOptions.setBounds(width*4/5,   height- height* 5/10, 80, 40);
-        btnOptions.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopMe();
-                dispose();
-                new SettingsLauncher("Launcher - Options");
-            }
-        });
-        window.add(btnOptions);
-
-        JButton btnExit = new JButton("Exit");
-        btnExit.setBounds(width*4/5,  height- height* 3/10 , 80, 40);
-        btnExit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(" [LOG] Exitting.");
-                System.exit(0);
-            }
-        });
-        window.add(btnExit);
+        // drawn elswhere for Launcher (within JPanel typed member window)
     }
 }
 
@@ -190,7 +209,6 @@ class SettingsLauncher extends Launcher{
             @Override
             public void actionPerformed(ActionEvent e) {
                 stopMe();
-                dispose();
                 new Launcher("Game Launcher", 800, 400);
             }
         });
@@ -209,7 +227,6 @@ class SettingsLauncher extends Launcher{
                 Config.save("height", App.height);
                 Config.save("resolutionId", dropDownRes.getSelectedIndex(), "Resolution");
                 stopMe();
-                dispose();
                 new Launcher("Game Launcher", 800, 400);
             }
         });

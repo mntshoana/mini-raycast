@@ -6,7 +6,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
     public boolean[] keyPresses = new boolean[68836];
     public int MouseX, MouseY;
     public int MousePressX, MousePressY;
-    public boolean Mousedragged;
+    public boolean Mousedragged, mouseclicked;
     public int lastMouseX = -1, lastMouseY = -1;
     public int MouseXDiff, MouseYDiff;
     @Override
@@ -39,6 +39,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        mouseclicked = true;
     }
 
     @Override
@@ -62,6 +63,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
     @Override
     public void mouseReleased(MouseEvent e) {
         Mousedragged = false;
+        mouseclicked = false;
     }
 
     @Override
