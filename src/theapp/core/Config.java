@@ -21,6 +21,9 @@ public class Config {
     }
     public static void save(String key, int value, String comment){
         try {
+            File dir = new File("res/settings");
+            if (!dir.exists())
+                dir.mkdirs();
             if (!file.exists())
                 file.createNewFile();
             OutputStream stream = new FileOutputStream(file.getPath());
