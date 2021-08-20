@@ -51,6 +51,7 @@ public class Launcher extends JFrame implements Runnable {
                 private Image btnPlayOn, btnPlayOff;
                 private Image btnOptionsOn, btnOptionsOff;
                 private Image btnExitOn, btnExitOff;
+                private Image arrow;
 
                 {
                     try {
@@ -61,6 +62,7 @@ public class Launcher extends JFrame implements Runnable {
                         btnOptionsOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnOptionsOff.png"));
                         btnExitOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnExitOn.png"));
                         btnExitOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnExitOff.png"));
+                        arrow = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/arrow.png"));
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -76,14 +78,17 @@ public class Launcher extends JFrame implements Runnable {
                 }
 
                 public void drawButtons(){
-                    drawButton(btnPlayOn, btnPlayOff, width * 4 / 5, height - height * 7 / 10, 80, 40, () -> play());
-                    drawButton(btnOptionsOn, btnOptionsOff, width * 4 / 5, height - height * 5 / 10, 80, 40, () -> options());
-                    drawButton(btnExitOn, btnExitOff, width * 4 / 5, height - height * 3 / 10, 80, 40, () -> exit());
+                    getGraphics().drawImage(image, 0, 0, width, height, null);
+                    int xPos = width * 4 / 5 - 20;
+                    drawButton(btnPlayOn, btnPlayOff, xPos + 25, height - height * 7 / 9, 80, 40, () -> play());
+                    drawButton(btnOptionsOn, btnOptionsOff, xPos, height - height * 5 / 9, 130, 40, () -> options());
+                    drawButton(btnExitOn, btnExitOff, xPos + 25, height - height * 3 / 9, 80, 40, () -> exit());
                 }
                 public void drawButton(Image buttonOn, Image buttonOff, int x, int y, int width, int height, Runnable onClick) {
                     Graphics graphics = getGraphics();
                     if (input.MouseX > x && input.MouseX < x + width && input.MouseY > y && input.MouseY < y + height){
                         graphics.drawImage(buttonOn, x, y, width, height, null);
+                        graphics.drawImage(arrow, x+width+7, y+10, 22, 20, null);
                         if (input.Mousedragged)
                             onClick.run();
                     }
