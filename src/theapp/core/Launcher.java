@@ -55,12 +55,12 @@ public class Launcher extends JFrame implements Runnable {
                 {
                     try {
                         image = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
-                        btnPlayOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
-                        btnPlayOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
-                        btnOptionsOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
-                        btnOptionsOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
-                        btnExitOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
-                        btnExitOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/launcher.jpg"));
+                        btnPlayOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnPlayOn.png"));
+                        btnPlayOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnPlayOff.png"));
+                        btnOptionsOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnOptionsOn.png"));
+                        btnOptionsOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnOptionsOff.png"));
+                        btnExitOn = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnExitOn.png"));
+                        btnExitOff = ImageIO.read(Launcher.class.getResourceAsStream("/images/launcher/btnExitOff.png"));
 
                     } catch (IOException e) {
                         e.printStackTrace();
