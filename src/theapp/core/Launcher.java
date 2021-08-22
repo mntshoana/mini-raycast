@@ -23,7 +23,14 @@ public class Launcher extends JFrame implements Runnable {
     protected int width;
     protected int height;
     protected Thread thread;
-    boolean running = false;
+    private volatile boolean running = false;
+
+    private synchronized void notRunning(){
+        running = false;
+    }
+    public Launcher (String title) {
+        this(title, 800, 400);
+    }
 
     public Launcher (String title, int width, int height){
         input = new InputHandler();
@@ -80,15 +87,17 @@ public class Launcher extends JFrame implements Runnable {
                 public void drawButtons(){
                     getGraphics().drawImage(image, 0, 0, width, height, null);
                     int xPos = width * 4 / 5 - 20;
-                    drawButton(btnPlayOn, btnPlayOff, xPos + 25, height - height * 7 / 9, 80, 40, () -> play());
-                    drawButton(btnOptionsOn, btnOptionsOff, xPos, height - height * 5 / 9, 130, 40, () -> options());
-                    drawButton(btnExitOn, btnExitOff, xPos + 25, height - height * 3 / 9, 80, 40, () -> exit());
+                    drawButton(btnPlayOn, btnPlayOff, xPos + 25, height - height * 7 / 9, 70, 40, () -> play());
+                    drawButton(btnOptionsOn, btnOptionsOff, xPos, height - height * 5 / 9, 120, 40, () -> options());
+                    drawButton(btnExitOn, btnExitOff, xPos + 25, height - height * 3 / 9, 70, 40, () -> exit());
                 }
                 public void drawButton(Image buttonOn, Image buttonOff, int x, int y, int width, int height, Runnable onClick) {
                     Graphics graphics = getGraphics();
+                    if (graphics == null)
+                        return;
                     if (input.MouseX > x && input.MouseX < x + width && input.MouseY > y && input.MouseY < y + height){
                         graphics.drawImage(buttonOn, x, y, width, height, null);
-                        graphics.drawImage(arrow, x+width+7, y+10, 22, 20, null);
+                        graphics.drawImage(arrow, x+width+10, y+8, 22, 19, null);
                         if (input.Mousedragged)
                             onClick.run();
                     }
@@ -98,14 +107,15 @@ public class Launcher extends JFrame implements Runnable {
                 }
 
                 private void play() {
+                    App.getLauncherInstance().stopMe();
                     new App().startGame();
-                    stopMe();
+
                 }
                 private void options() {
-                    new SettingsLauncher("Launcher - Options");
-                    stopMe();
+                    App.setLauncherInstance(SettingsLauncher.class, "Launcher - Options");
                 }
                 private void exit(){
+                    App.getLauncherInstance().stopMe();
                     System.out.println(" [LOG] Exitting.");
                     System.exit(0);
                 }
@@ -126,15 +136,16 @@ public class Launcher extends JFrame implements Runnable {
 
     }
     public void stopMe(){
-        running = false;
+        notRunning();
         this.dispose();
         try {
-            thread.join();
+            if (thread.getName() != Thread.currentThread().getName())
+                thread.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-
     }
+
     public void update(){
         if (this.getClass() == Launcher.class) {
             try {
@@ -213,8 +224,7 @@ class SettingsLauncher extends Launcher{
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                stopMe();
-                new Launcher("Game Launcher", 800, 400);
+                App.setLauncherInstance(Launcher.class, "Game Launcher");
             }
         });
         window.add(btnCancel);
@@ -231,8 +241,7 @@ class SettingsLauncher extends Launcher{
                 Config.save("width", App.width);
                 Config.save("height", App.height);
                 Config.save("resolutionId", dropDownRes.getSelectedIndex(), "Resolution");
-                stopMe();
-                new Launcher("Game Launcher", 800, 400);
+                App.setLauncherInstance( Launcher.class, "Game Launcher");
             }
         });
         window.add(btnOK);

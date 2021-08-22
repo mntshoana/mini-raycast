@@ -4,11 +4,14 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 import theapp.graphics.Renderer;
 
 public class App extends Canvas implements Runnable{
+    private static Launcher launcher;
     public static int width;
     public static int height;
     static {
@@ -53,6 +56,22 @@ public class App extends Canvas implements Runnable{
         frame.getContentPane().setCursor(blankCursor);
 
         renderer = new Renderer(this);
+    }
+
+    public static Launcher getLauncherInstance(){
+        if (launcher == null )
+            return launcher = new Launcher("Game Launcher");
+        return launcher;
+    }
+    public static void setLauncherInstance(Class<? extends Launcher> className, String title){
+        Class<?>[] type = { String.class, };
+        Object[] obj = { "Game Launcher"};
+        try {
+            launcher.stopMe();
+            launcher = (Launcher) className.getConstructor(type).newInstance(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
@@ -123,7 +142,7 @@ public class App extends Canvas implements Runnable{
     }
     
     public static void main(String[] args){
-        Launcher app = new Launcher("Game Launcher", 800, 400);
+        App.getLauncherInstance();
         return;
     }
 }
