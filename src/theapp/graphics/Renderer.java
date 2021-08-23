@@ -57,7 +57,7 @@ public class Renderer {
                 if (xPixel < 0 || xPixel >= App.width)
                     continue;
 
-                int alpha = object.displayMemory[x + object.width*(y)]; // allow empty pixels to not be written which allows transparency
+                int alpha = object.displayMemory[x + object.width*(y)]; // ignroe empty pixels (allows transparency)
                 if (alpha > 0) {
                     parent.getBuffer()[xPixel + App.width * (yPixel)]
                             = object.displayMemory[x + object.width * (y)];
