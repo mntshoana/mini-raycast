@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 public class Texture {
-    public static RenderedObject floor = loadBitmap("/textures/greenBlock.png");
+    public static RenderedObject floor = loadBitmap("/textures/grayBlock.png");
     public static RenderedObject ceiling = loadBitmap("/textures/blueBlock.png");
-    public static RenderedObject wall = loadBitmap("/textures/colorBlock.png");
+    public static RenderedObject wall = loadBitmap("/textures/redBlock.png");
     public static RenderedObject loadBitmap(String filename){
         try{
             BufferedImage image = ImageIO.read(Texture.class.getResource(filename));

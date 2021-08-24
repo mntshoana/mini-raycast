@@ -17,7 +17,7 @@ public class Controller {
     private static void update(boolean forward, boolean back,
                        boolean left, boolean right,
                        boolean turnLeft, boolean turnRight, boolean sprint){
-        double rotationSpeed = 0.005;
+        double rotationSpeed = 0.01;
         double walkSpeed = 1.2;
         double zMove = 0;
         double xMove = 0;

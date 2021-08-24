@@ -29,7 +29,7 @@ public class RandomMaize {
 
         for(int y = 0; y < height; ++y) {
             for(int x = 0; x < width; ++x) {
-                if (random.nextInt(5) == 0) {
+                if (random.nextInt(7) == 0) {
                     this.solidBlocks[x + y * width] = true;
                 } else {
                     this.solidBlocks[x + y * width] = false;
@@ -52,9 +52,9 @@ public class RandomMaize {
     }
     public void draw() {
         for (int i = 0; i < App.width; i++)
-            zBuffer[i] = -1.0;
+            zBuffer[i] = -2.0;
         for(int x = -1; x < width + 1; ++x) {
-            for(int z = -1; z < height+1; ++z) {
+            for(int z = height; z >= -1; --z) {
                 if (this.checkBlock(x, z)) {
                     if (!this.checkBlock(x + 1, z)) // east
                         extendWall(x + 1, x + 1, z, z+1);
