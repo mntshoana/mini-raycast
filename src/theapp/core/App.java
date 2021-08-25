@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 import theapp.graphics.Renderer;
@@ -68,7 +66,7 @@ public class App extends Canvas implements Runnable{
         Object[] obj = { "Game Launcher"};
         try {
             launcher.stopMe();
-            launcher = (Launcher) className.getConstructor(type).newInstance(obj);
+            launcher = className.getConstructor(type).newInstance(obj);
         } catch (Exception e) {
             e.printStackTrace();
         }

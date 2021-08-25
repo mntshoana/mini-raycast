@@ -10,6 +10,7 @@ import java.util.Random;
 import theapp.core.App;
 import theapp.graphics.RenderedWall;
 import theapp.graphics.Renderer;
+import theapp.input.Controller;
 
 public class RandomMaize {
     private double zBuffer[];
@@ -27,8 +28,8 @@ public class RandomMaize {
         wall.reconfZBuffer(zBuffer);
         Random random = new Random();
 
-        for(int y = 0; y < height; ++y) {
-            for(int x = 0; x < width; ++x) {
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
                 if (random.nextInt(7) == 0) {
                     this.solidBlocks[x + y * width] = true;
                 } else {
@@ -36,22 +37,37 @@ public class RandomMaize {
                 }
             }
         }
+        double spawnX = 0.201;
+        double spawnZ = 0.201;
+        while (!isCollision(spawnX, spawnZ)) {
+            spawnX += 0.201;
+            spawnZ += 0.201;
+        }
+        Controller.x = spawnX;
+        Controller.z = spawnZ;
     }
 
     private boolean checkBlock(int x, int y) {
         return x >= 0 && y >= 0 && x < this.width && y < this.height ? this.solidBlocks[x + y * this.width] : true;
     }
-    public static boolean checkCollision(double x, double z){
-        int xInt = (int) (x/10);
-        int zInt = (int) (z/10);
-        if (xInt < 0 || zInt < 0 || xInt >= width || zInt >= height)
+    public static boolean isCollision(double x, double z){
+        // purpose: Detects if the player's movements have collided with a wall
+        //          (static) It is meant to be called from within the Controller class
+        // param: x and z are the position of the player
+        //          The param values are what the Controller class intends to update towards internally.
+        //
+        double xScale = 10;
+        double zScale = 10;
+        int xInt = (int) (x / xScale);
+        int zInt = (int) (z / zScale);
+        if (xInt < 0 || zInt < 0 || xInt >= width || zInt >= height) // define out of bounds as a collision
             return false;
         boolean isSolid = solidBlocks[xInt + zInt * width];
-        return x > 0.0 && z > 0.0 && x < 400.0 && z < 400 && !isSolid;
+        return x > 0.0 && z > 0.0 && x < width * xScale && z < height * zScale && !isSolid;
     }
 
     private void extendWall(int xLeft, int xRight, int zLeft, int zRight){
-
+        // walls are scaled up by 40
         wall.reconf( 40* xLeft, 40 * xRight, 40 * zLeft, 40 * zRight, 5 , 20);
         wall.reconf( 40* xLeft, 40 * xRight, 40 * zLeft, 40 * zRight, 25 , 20);
         wall.reconf( 40* xLeft, 40 * xRight, 40 * zLeft, 40 * zRight, 45 , 20);

@@ -5,7 +5,7 @@ import theapp.level.RandomMaize;
 import java.awt.event.KeyEvent;
 
 public class Controller {
-    public static double x=0.201, y,z=0.201;
+    public static double x, y,z;
     private static double xx, zz;
     public static double rotation;
     private static double rotation2;
@@ -48,16 +48,16 @@ public class Controller {
         zz += ((zMove * Math.cos(rotation) - xMove * Math.sin((rotation) )) )* walkSpeed;
 
         if (xx < 0)
-            if (RandomMaize.checkCollision(x+xx -4, z))
+            if (RandomMaize.isCollision(x+xx -4, z))
                 x += xx;
         if (xx > 0)
-            if (RandomMaize.checkCollision(x+xx +4, z))
+            if (RandomMaize.isCollision(x+xx +4, z))
                 x += xx;
         if (zz < 0)
-            if (RandomMaize.checkCollision(x, z + zz-4))
+            if (RandomMaize.isCollision(x, z + zz-4))
                 z += zz;
         if (zz > 0)
-            if (RandomMaize.checkCollision(x, z + zz+4))
+            if (RandomMaize.isCollision(x, z + zz+4))
                 z += zz;
 
         xx *= 0.1;
@@ -73,7 +73,7 @@ public class Controller {
     }
     private static void update(boolean jump, boolean crouch){
         final double maxH = 15, minH = -10;
-        double jumpIncrements = 0.75, crouchLevel = 2.5;
+        double jumpIncrements = 0.55, crouchLevel = 2.5;
 
         crouched = (y < 0) ? true: false;
         jumped = (y > 0 ) ? true: false;
@@ -93,9 +93,9 @@ public class Controller {
                 else if (y < 13)
                     y += (2 * jumpIncrements);
                 else
-                    y += jumpIncrements;
+                    y += 0.5 * jumpIncrements;
 
-                if (y == maxH)
+                if (y >= maxH)
                     jumpPeak = true;
 
                 jumpTime += 1; // moment of hover in air
@@ -111,7 +111,7 @@ public class Controller {
             jumpPeak = true;
 
             if (y > 13)
-                y -= jumpIncrements;
+                y -= 0.5 * jumpIncrements;
             else if (y > 10 ) {
                 if (jumpTime <= 2) {// hover a little
                     jumpTime--;
