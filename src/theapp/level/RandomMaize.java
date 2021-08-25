@@ -13,15 +13,15 @@ import theapp.graphics.Renderer;
 
 public class RandomMaize {
     private double zBuffer[];
-    private boolean[] solidBlocks;
-    private final int width;
-    private final int height;
+    public static boolean[] solidBlocks;
+    private static int width;
+    private static int height;
     private RenderedWall wall;
 
     public RandomMaize(int width, int height, Renderer renderer) {
         this.width = width;
         this.height = height;
-        this.solidBlocks = new boolean[width * height];
+        solidBlocks = new boolean[width * height];
         this.zBuffer = new double[App.width];
         this.wall = new RenderedWall(renderer.getBuffer()); // use actual Renderer buffer (avoid copying of render.draw)
         wall.reconfZBuffer(zBuffer);
@@ -40,6 +40,14 @@ public class RandomMaize {
 
     private boolean checkBlock(int x, int y) {
         return x >= 0 && y >= 0 && x < this.width && y < this.height ? this.solidBlocks[x + y * this.width] : true;
+    }
+    public static boolean checkCollision(double x, double z){
+        int xInt = (int) (x/10);
+        int zInt = (int) (z/10);
+        if (xInt < 0 || zInt < 0 || xInt >= width || zInt >= height)
+            return false;
+        boolean isSolid = solidBlocks[xInt + zInt * width];
+        return x > 0.0 && z > 0.0 && x < 400.0 && z < 400 && !isSolid;
     }
 
     private void extendWall(int xLeft, int xRight, int zLeft, int zRight){

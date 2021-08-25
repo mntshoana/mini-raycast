@@ -157,10 +157,7 @@ public class Launcher extends JFrame implements Runnable {
         if (input.Mousedragged == true && running == true){
             int newX = getX() + input.MouseXDiff;
             int newY = getY() + input.MouseYDiff;
-            System.out.println("[LOG] Mouse press x: " + input.MousePressX + " y: " + input.MousePressY );
-            System.out.println("[LOG] Last mouse press x: " + input.lastMouseX + " y: " + input.lastMouseY );
-            System.out.println("[LOG] Mouse diff x: " + input.MouseXDiff + " y: " + input.MouseYDiff );
-            System.out.println("[LOG] Location before: " + getX() + ", " + getY() + " and after: " + newX + ", " + newY);
+
             input.lastAcceptedPress(input.MouseXDiff, input.MouseYDiff);
             setLocation(newX, newY);
         }

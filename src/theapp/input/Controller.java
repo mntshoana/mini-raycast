@@ -1,9 +1,11 @@
 package theapp.input;
 
+import theapp.level.RandomMaize;
+
 import java.awt.event.KeyEvent;
 
 public class Controller {
-    public static double x, y,z;
+    public static double x=0.201, y,z=0.201;
     private static double xx, zz;
     public static double rotation;
     private static double rotation2;
@@ -23,13 +25,13 @@ public class Controller {
         double xMove = 0;
         Controller.sprint = sprint;
         if (forward)
-            zMove++;
+            zMove+=0.75;
         if (back)
-            zMove--;
+            zMove-=0.75;
         if (left)
-            xMove--;
+            xMove-=0.75;
         if (right)
-            xMove++;
+            xMove+=0.75;
         if (turnLeft)
             rotation2 -= rotationSpeed;
         if (turnRight)
@@ -44,8 +46,19 @@ public class Controller {
             walkSpeed = 0.75;
         xx += ((xMove * Math.cos(rotation) + zMove * Math.sin((rotation) ))) * walkSpeed;
         zz += ((zMove * Math.cos(rotation) - xMove * Math.sin((rotation) )) )* walkSpeed;
-        x += xx;
-        z += zz;
+
+        if (xx < 0)
+            if (RandomMaize.checkCollision(x+xx -4, z))
+                x += xx;
+        if (xx > 0)
+            if (RandomMaize.checkCollision(x+xx +4, z))
+                x += xx;
+        if (zz < 0)
+            if (RandomMaize.checkCollision(x, z + zz-4))
+                z += zz;
+        if (zz > 0)
+            if (RandomMaize.checkCollision(x, z + zz+4))
+                z += zz;
 
         xx *= 0.1;
         zz *= 0.1;

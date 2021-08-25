@@ -75,7 +75,6 @@ public class Renderer {
 
         // Playing with background like image drawn from code
         draw(scene, 0, 0);
-        System.out.println("X: " + input.MouseX + ", Y: " + input.MouseY );
         level.draw();
     }
     private void tick(){
