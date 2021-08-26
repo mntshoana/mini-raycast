@@ -9,31 +9,41 @@ import java.util.Random;
 
 import theapp.core.App;
 import theapp.graphics.RenderedWall;
+import theapp.graphics.RenderedSprite;
 import theapp.graphics.Renderer;
 import theapp.input.Controller;
 
 public class RandomMaize {
-    private double zBuffer[];
-    public static boolean[] solidBlocks;
+    private double zBufferWall[];
+    private double zBufferSprite[];
+    public static Byte[] solidBlocks;
     private static int width;
     private static int height;
     private RenderedWall wall;
+    private RenderedSprite sprite;
 
     public RandomMaize(int width, int height, Renderer renderer) {
         this.width = width;
         this.height = height;
-        solidBlocks = new boolean[width * height];
-        this.zBuffer = new double[App.width];
+        solidBlocks = new Byte[width * height];
+        this.zBufferWall = new double[App.width];
         this.wall = new RenderedWall(renderer.getBuffer()); // use actual Renderer buffer (avoid copying of render.draw)
-        wall.reconfZBuffer(zBuffer);
+        wall.reconfZBuffer(zBufferWall);
+        this.zBufferSprite = new double[App.width*App.height];
+        this.sprite = new RenderedSprite(renderer.getBuffer()); // use Render buffer here too
+        sprite.reconfZBuffer(zBufferSprite);
+
         Random random = new Random();
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
                 if (random.nextInt(7) == 0) {
-                    this.solidBlocks[x + y * width] = true;
+                    this.solidBlocks[x + y * width] = 1; // 1 is a solid wall
                 } else {
-                    this.solidBlocks[x + y * width] = false;
+                    //if (random.nextInt(7) == 0)
+                        this.solidBlocks[x + y * width] = 2; // 2 is a sprite
+                    //else
+                      //  this.solidBlocks[x + y * width] = 0; // empty
                 }
             }
         }
@@ -48,7 +58,10 @@ public class RandomMaize {
     }
 
     private boolean checkBlock(int x, int y) {
-        return x >= 0 && y >= 0 && x < this.width && y < this.height ? this.solidBlocks[x + y * this.width] : true;
+        return x >= 0 && y >= 0 && x < this.width && y < this.height ? this.solidBlocks[x + y * this.width] ==1 : true;
+    }
+    private boolean isSprite(int x, int y) {
+        return x >= 0 && y >= 0 && x < this.width && y < this.height ? this.solidBlocks[x + y * this.width] ==2 : false;
     }
     public static boolean isCollision(double x, double z){
         // purpose: Detects if the player's movements have collided with a wall
@@ -62,7 +75,7 @@ public class RandomMaize {
         int zInt = (int) (z / zScale);
         if (xInt < 0 || zInt < 0 || xInt >= width || zInt >= height) // define out of bounds as a collision
             return false;
-        boolean isSolid = solidBlocks[xInt + zInt * width];
+        boolean isSolid = solidBlocks[xInt + zInt * width] == 1;
         return x > 0.0 && z > 0.0 && x < width * xScale && z < height * zScale && !isSolid;
     }
 
@@ -75,8 +88,11 @@ public class RandomMaize {
         // no need to call draw method of renderer
     }
     public void draw() {
-        for (int i = 0; i < App.width; i++)
-            zBuffer[i] = -2.0;
+        for (int i = 0; i < App.width; i++) {
+            zBufferWall[i] = -2.0;
+            for (int j = 0; j < App.height; j++)
+            zBufferSprite[i + j * width] = -400.0;
+        }
         for(int x = -1; x < width + 1; ++x) {
             for(int z = height; z >= -1; --z) {
                 if (this.checkBlock(x, z)) {
@@ -89,7 +105,15 @@ public class RandomMaize {
                         extendWall(x, x+1, z+1, z+1);
                     if (this.checkBlock(x + 1, z)) // east
                         extendWall(x+1, x+1, z+1, z);
+                }
 
+
+            }
+        }
+        for(int x = -1; x < width + 1; ++x) {
+            for (int z = height; z >= -1; --z) {
+                if (isSprite(x, z)) {
+                    sprite.reconf(x * 10, 0, z * 10);
                 }
             }
         }
