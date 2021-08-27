@@ -111,7 +111,9 @@ public class RandomMaize {
             }
         }
         for(int x = -1; x < width + 1; ++x) {
+            if (x * 10 > width * 5) continue;
             for (int z = height; z >= -1; --z) {
+                if (z * 10 > height * 5) continue;
                 if (isSprite(x, z)) {
                     sprite.reconf(x * 10, 0, z * 10);
                 }
