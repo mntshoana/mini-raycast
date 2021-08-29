@@ -102,12 +102,6 @@ public class RenderedWall extends RenderedObject {
         for (int x = xPixelLeftInt; x < xPixelRightInt; x++) {
             double pixelRotation = (x - xPixelLeft) / (xPixelRight - xPixelLeft);
 
-            if (zBuffer != null) {
-                double tempZ =  txt0 + (txt1 - txt0) * pixelRotation;
-                if (zBuffer[x] > tempZ)
-                    continue; // do not draw wall if behind another wall
-                zBuffer[x] = tempZ;
-            }
 
             double yPixelTop = yPixelTopL + (yPixelTopR - yPixelTopL) * pixelRotation;
             double yPixelBottom = yPixelBottomL + (yPixelBottomR - yPixelBottomL) * pixelRotation;
@@ -122,6 +116,13 @@ public class RenderedWall extends RenderedObject {
                 yPixelBottomInt = height;
 
             for (int y = yPixelTopInt; y < yPixelBottomInt; y++) {
+                if (zBuffer != null) {
+                    double tempZ =  txt0 + (txt1 - txt0) * pixelRotation;
+                    if (zBuffer[x + y * width] > tempZ)
+                        continue; // do not draw wall if behind another wall
+                    zBuffer[x+ y* width] = tempZ;
+                }
+
                 int yTexture = (int) (8 * (y - yPixelTop) / (yPixelBottom - yPixelTop));
                 //int texture = (xTexture * 100 + yTexture * 100 ) * 256 ;
                 int pixel = Texture.wall.displayMemory[(xTexture & 7) + (yTexture & 7) * 8];

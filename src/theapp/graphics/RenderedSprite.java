@@ -2,16 +2,14 @@ package theapp.graphics;
 
 import theapp.core.App;
 import theapp.input.Controller;
-import theapp.level.RandomMaize;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class RenderedSprite extends RenderedObject {
     private double x;
     private double y;
     private double z;
-    private double zBuffer[];
+    private double zBuffer[], zBufferWall[];
 
     public RenderedSprite(double x, double y, double z) {
         super(App.width, App.height);
@@ -30,6 +28,8 @@ public class RenderedSprite extends RenderedObject {
         this.loader = () -> init();
     }
 
+    double min = Double.MAX_VALUE;
+    double max = Double.MIN_VALUE;
     private void init() {
         double walkingBob = Renderer.getWalkingBob();
         final double cos = Math.cos(Controller.rotation);
@@ -49,10 +49,10 @@ public class RenderedSprite extends RenderedObject {
         double xPixel = rotationX / rotationZ * height + xMid;
         double yPixel = rotationY / rotationZ * height + yMid;
 
-        double xLeft = xPixel - 64 / rotationZ;
-        double xRight = xPixel + 64 / rotationZ;
-        double yTop = yPixel - 64 / rotationZ;
-        double yBottom = yPixel + 64 / rotationZ;
+        double xLeft = xPixel - 128 / rotationZ;
+        double xRight = xPixel + 128 / rotationZ;
+        double yTop = yPixel - 128 / rotationZ;
+        double yBottom = yPixel + 128 / rotationZ;
 
         int xLeftInt = (int) xLeft;
         int xRightInt = (int) xRight;
@@ -64,13 +64,30 @@ public class RenderedSprite extends RenderedObject {
         if (xRightInt > width) xRightInt = width;
         if (yBottomInt > height) yBottomInt = height;
 
-        rotationZ *= 8;
+        if (rotationZ <= 0.01)
+            return;
+        if (rotationZ >70)
+          return;
+        if (rotationZ < min) min = rotationZ;
+        if (rotationZ > max) max = rotationZ;
+        double zCorrection =  1.0/Math.ceil(max);
+        rotationZ = (1- rotationZ * zCorrection)*0.009 - 0.001;
+
+
 
         for (int x = xLeftInt; x < xRightInt; x++) {
+
             for (int y = yTopInt; y < yBottomInt; y++) {
-                int pixel = 0xCCDD00;
-                displayMemory[x + y * width] = RenderedObject.fade(pixel, rotationZ/8); // color wall
-                zBuffer[x + y * width] = rotationZ;
+
+                if (zBufferWall != null && zBufferWall[x+y*width] +0.001 >=  rotationZ && zBufferWall[x+y*width]  != 0.0 )
+                    continue;
+                System.out.println("rotationZ: " + rotationZ+ "  ZWall: " + zBufferWall[x] );
+                //if (zBuffer[x + y * width] < rotationZ) {
+                    int pixel = 0xDDAA00;
+                    zBuffer[x + y * width] = rotationZ;
+                    displayMemory[x + y * width] = RenderedObject.fade(pixel, 1 / (rotationZ * (x - xLeftInt) / (xRightInt - xLeftInt)) /4); // color wall
+
+                //}
             }
         }
     }
@@ -82,7 +99,8 @@ public class RenderedSprite extends RenderedObject {
         loader.run();
     }
 
-    public void reconfZBuffer(double zBuffer[]) {
+    public void reconfZBuffer(double zBuffer[], double zBufferWall[]) {
         this.zBuffer = zBuffer;
+        this.zBufferWall = zBufferWall;
     }
 }

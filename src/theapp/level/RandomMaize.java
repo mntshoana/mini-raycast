@@ -26,12 +26,12 @@ public class RandomMaize {
         this.width = width;
         this.height = height;
         solidBlocks = new Byte[width * height];
-        this.zBufferWall = new double[App.width];
+        this.zBufferWall = new double[App.width * App.height];
         this.wall = new RenderedWall(renderer.getBuffer()); // use actual Renderer buffer (avoid copying of render.draw)
         wall.reconfZBuffer(zBufferWall);
         this.zBufferSprite = new double[App.width*App.height];
         this.sprite = new RenderedSprite(renderer.getBuffer()); // use Render buffer here too
-        sprite.reconfZBuffer(zBufferSprite);
+        sprite.reconfZBuffer(zBufferSprite, zBufferWall);
 
         Random random = new Random();
 
@@ -88,11 +88,11 @@ public class RandomMaize {
         // no need to call draw method of renderer
     }
     public void draw() {
-        for (int i = 0; i < App.width; i++) {
-            zBufferWall[i] = -2.0;
-            for (int j = 0; j < App.height; j++)
-            zBufferSprite[i + j * width] = -400.0;
-        }
+
+        for (int i = 0; i < App.width; i++)
+            for (int j =0; j < App.height; j++)
+            zBufferWall[i + j * App.width] = 0;
+
         for(int x = -1; x < width + 1; ++x) {
             for(int z = height; z >= -1; --z) {
                 if (this.checkBlock(x, z)) {
@@ -106,19 +106,24 @@ public class RandomMaize {
                     if (this.checkBlock(x + 1, z)) // east
                         extendWall(x+1, x+1, z+1, z);
                 }
-
-
             }
         }
-        for(int x = -1; x < width + 1; ++x) {
-            if (x * 10 > width * 5) continue;
+
+
+        for (int i = 0; i < App.width; i++) {
+            for (int j = 0; j < App.height; j++)
+                zBufferSprite[i + j * width] = 0.0;
+        }
+        for(int x = width; x >= -1; --x) {
+            if (x * 5 > width * 5) // no sprites outside maize bounds
+                continue;
             for (int z = height; z >= -1; --z) {
-                if (z * 10 > height * 5) continue;
+                if (z * 5 > height * 5) // no sprites outside maize bounds
+                    continue;
                 if (isSprite(x, z)) {
-                    sprite.reconf(x * 10, 0, z * 10);
+                    sprite.reconf((x+0.5) * 5, 5, (z+0.5) * 5);
                 }
             }
         }
-
     }
 }
