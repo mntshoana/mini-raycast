@@ -71,21 +71,26 @@ public class RenderedSprite extends RenderedObject {
         if (rotationZ < min) min = rotationZ;
         if (rotationZ > max) max = rotationZ;
         double zCorrection =  1.0/Math.ceil(max);
-        rotationZ = (1- rotationZ * zCorrection)*0.009 - 0.001;
+        rotationZ = (1- (rotationZ) * zCorrection)*0.00892 ;
 
 
 
         for (int x = xLeftInt; x < xRightInt; x++) {
-
+            double pixelRotationX = (x - xRight) / (xLeft - xRight);
+            int xTexture = (int) (pixelRotationX * 8);
             for (int y = yTopInt; y < yBottomInt; y++) {
 
-                if (zBufferWall != null && zBufferWall[x+y*width] +0.001 >=  rotationZ && zBufferWall[x+y*width]  != 0.0 )
+                if (zBufferWall != null && zBufferWall[x+y*width] >=  rotationZ && zBufferWall[x+y*width]  != 0.0 )
                     continue;
-                System.out.println("rotationZ: " + rotationZ+ "  ZWall: " + zBufferWall[x] );
+
+                double pixelRotationY = (y - yBottom) / (yTop - yBottom);
+                int yTexture = (int) (pixelRotationY * 8);
+
+                //System.out.println("rotationZ: " + rotationZ+ "  ZWall: " + zBufferWall[x] );
                 //if (zBuffer[x + y * width] < rotationZ) {
-                    int pixel = 0xDDAA00;
+                        int pixel = Texture.target.displayMemory[(xTexture&7) + (yTexture&7)*8];
                     zBuffer[x + y * width] = rotationZ;
-                    displayMemory[x + y * width] = RenderedObject.fade(pixel, 1 / (rotationZ * (x - xLeftInt) / (xRightInt - xLeftInt)) /4); // color wall
+                    displayMemory[x + y * width] = RenderedObject.fade(pixel, 1/* / (rotationZ *  pixelRotationY) *8 */); // color wall
 
                 //}
             }
