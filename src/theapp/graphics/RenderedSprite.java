@@ -88,9 +88,11 @@ public class RenderedSprite extends RenderedObject {
 
                 //System.out.println("rotationZ: " + rotationZ+ "  ZWall: " + zBufferWall[x] );
                 //if (zBuffer[x + y * width] < rotationZ) {
-                        int pixel = Texture.target.displayMemory[(xTexture&7) + (yTexture&7)*8];
-                    zBuffer[x + y * width] = rotationZ;
-                    displayMemory[x + y * width] = RenderedObject.fade(pixel, 1/* / (rotationZ *  pixelRotationY) *8 */); // color wall
+                int pixel = Texture.target.displayMemory[(xTexture&7) + (yTexture&7)*8];
+                if (pixel == 0xFFFF00FF) // Pink, make it transparent
+                    continue;
+                zBuffer[x + y * width] = rotationZ;
+                displayMemory[x + y * width] = RenderedObject.fade(pixel, 1/* / (rotationZ *  pixelRotationY) *8 */); // color wall
 
                 //}
             }
