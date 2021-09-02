@@ -2,6 +2,7 @@ package theapp.core;
 
 import javax.swing.JFrame;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
     private JFrame frame;
@@ -47,7 +48,27 @@ public class Game extends Canvas implements Runnable {
     public void run() {
         while (isRunning) {
             System.out.println("Success... (hwello! :)");
+            update();// handles logic and calculations
+            render(); // redraw (basically as fast as we can)
         }
+    }
+
+    public  void update() {
+
+    }
+
+    public void render() {
+        BufferStrategy buffer = getBufferStrategy(); // Canvas already has one
+        if (buffer == null){
+            createBufferStrategy(3);
+            return;
+        }
+
+        Graphics g = buffer.getDrawGraphics();
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.dispose();
+        buffer.show(); // blitting
     }
 
     public static void main (String[] args) {
