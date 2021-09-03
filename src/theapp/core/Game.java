@@ -1,11 +1,17 @@
 package theapp.core;
 
+import theapp.graphics.VisualBuffer;
+
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 public class Game extends Canvas implements Runnable {
     private JFrame frame;
+    private BufferedImage privateBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    private VisualBuffer screen;
 
     private Thread gameThread;
     private boolean isRunning = false;
@@ -22,6 +28,8 @@ public class Game extends Canvas implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.add(this);
+
+        screen = new VisualBuffer(width, height);
 
         Dimension dimension = new Dimension(width*scale, height*scale);
         setPreferredSize(dimension);
@@ -64,9 +72,12 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
+        screen.renderToBuffer();
+        int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();
+        for (int i = 0; i < screen.pixels.length; i++)
+            privateBufRef[i] = screen.pixels[i];
         Graphics g = buffer.getDrawGraphics();
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.drawImage(privateBuffer, 0, 0, getWidth(), getHeight(), null);
         g.dispose();
         buffer.show(); // blitting
     }
