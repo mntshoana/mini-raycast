@@ -54,11 +54,21 @@ public class Game extends Canvas implements Runnable {
 
     @Override
     public void run() {
+        long lastNanoTime = System.nanoTime();
+        double delta = 0.0;
+        final double fractionalUpdate = 1000000000.0/60;
         while (isRunning) {
-            System.out.println("Success... (hwello! :)");
-            update();// handles logic and calculations
+            long now = System.nanoTime();
+            delta += (now - lastNanoTime) / fractionalUpdate;
+            while (delta >= 1) {
+                // game update limiter: 60 calculation max per second
+                System.out.println("Success... (hwello 60 times a second! :)");
+                update();// handles logic and calculations
+            }
+            // todo: fps counter and limiter
             render(); // redraw (basically as fast as we can)
         }
+        stop();
     }
 
     public  void update() {
