@@ -60,6 +60,7 @@ public class Game extends Canvas implements Runnable {
         while (isRunning) {
             long now = System.nanoTime();
             delta += (now - lastNanoTime) / fractionalUpdate;
+            lastNanoTime = now;
             while (delta >= 1) {
                 // game update limiter: 60 calculation max per second
                 System.out.println("Success... (hwello 60 times a second! :)");
