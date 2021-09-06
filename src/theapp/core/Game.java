@@ -10,6 +10,7 @@ import java.awt.image.DataBufferInt;
 
 public class Game extends Canvas implements Runnable {
     private JFrame frame;
+    private final String TITLE = "Ray-casting 2.0";
     private BufferedImage privateBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private VisualBuffer screen;
 
@@ -24,7 +25,7 @@ public class Game extends Canvas implements Runnable {
     public Game () {
         frame = new JFrame();
         frame.setResizable(false);
-        frame.setTitle("Ray-casting 2.0");
+        frame.setTitle(TITLE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.add(this);
@@ -55,19 +56,35 @@ public class Game extends Canvas implements Runnable {
     @Override
     public void run() {
         long lastNanoTime = System.nanoTime();
+        long secondTimer = System.currentTimeMillis();
         double delta = 0.0;
         final double fractionalUpdate = 1000000000.0/60;
+        // fps counter
+        int framesCounter = 0; // how many framesCounter the computer can actually run
+        int updatesCounter = 0; // how many times upadte() is called
         while (isRunning) {
             long now = System.nanoTime();
             delta += (now - lastNanoTime) / fractionalUpdate;
             lastNanoTime = now;
             while (delta >= 1) {
                 // game update limiter: 60 calculation max per second
-                System.out.println("Success... (hwello 60 times a second! :)");
+                //System.out.println("Success... (hwello 60 times a second! :)");
                 update();// handles logic and calculations
+                updatesCounter++;
+                delta--;
             }
-            // todo: fps counter and limiter
             render(); // redraw (basically as fast as we can)
+            framesCounter++;
+
+            if (System.currentTimeMillis() - secondTimer > 1000){
+                // if a second has passed
+                // display fps
+                secondTimer += 1000; // add a second
+                frame.setTitle(TITLE + "   |   " + updatesCounter + " ups " + framesCounter + " fps");
+                System.out.println(updatesCounter + " ups");
+                System.out.println(framesCounter + " fps");
+                updatesCounter = framesCounter = 0; // reset counters
+            }
         }
         stop();
     }
