@@ -89,8 +89,17 @@ public class Game extends Canvas implements Runnable {
         stop();
     }
 
+    private int xOff = 0;
+    private int yOff = 0;
+    private int yUpdater = 1;
     public  void update() {
-
+        xOff++;
+        if (xOff % 2 == 0)
+            yOff+=yUpdater;
+        if (yOff > 100)
+            yUpdater = -1;
+        if (yOff < -100)
+            yUpdater = 1;
     }
 
     public void render() {
@@ -100,7 +109,7 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
-        screen.renderToBuffer();
+        screen.renderToBuffer(xOff,yOff);
         int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();
         for (int i = 0; i < screen.pixels.length; i++)
             privateBufRef[i] = screen.pixels[i];

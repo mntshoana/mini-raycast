@@ -5,21 +5,24 @@ import java.util.Random;
 public class VisualBuffer {
     private int width, height;
     public int[] pixels;
-    private int[] tiles = new int[64*64];
+    private final int SIDE = 64;
+    private int[] tiles = new int[SIDE*SIDE];
     public VisualBuffer (int width, int height) {
         this.width = width;
         this.height = height;
         pixels = new int[width * height];
         Random random = new Random();
-        for (int x = 0; x < 64; x++)
-            for (int y = 0; y < 64; y++)
-                tiles[x + y * 64] = random.nextInt(0xfffff);
+        for (int x = 0; x < SIDE; x++)
+            for (int y = 0; y < SIDE; y++)
+                tiles[x + y * SIDE] = random.nextInt(0xfffff);
     }
 
-    public void renderToBuffer() {
+    public void renderToBuffer(int xOffset, int yOffset) {
         for (int y = 0; y < height; y++){
+            int yInd = ((y+yOffset) >> 4) & (SIDE-1);  // equal but faster than: floor(y+yoffset) / 16
             for (int x = 0; x < width; x++){
-                int indexScaledUp = (x>>4) + ((y>>4) << 6); // equal but faster than: x / 16 + (floor(y / 16) * 64 )
+                int xInd = ((x+xOffset) >> 4) & (SIDE-1); // equal but faster than: floor(x+xoffset) / 16
+                int indexScaledUp = xInd + (yInd << 6);
                 pixels[x + y * width] = tiles[indexScaledUp]; // Dark gray
             }
         }
