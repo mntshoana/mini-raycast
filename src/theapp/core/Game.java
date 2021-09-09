@@ -1,6 +1,7 @@
 package theapp.core;
 
 import theapp.graphics.VisualBuffer;
+import theapp.input.Keyboard;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -13,7 +14,7 @@ public class Game extends Canvas implements Runnable {
     private final String TITLE = "Ray-casting 2.0";
     private BufferedImage privateBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private VisualBuffer screen;
-
+    private Keyboard keyboard;
     private Thread gameThread;
     private boolean isRunning = false;
 
@@ -36,6 +37,9 @@ public class Game extends Canvas implements Runnable {
         setPreferredSize(dimension);
         frame.pack(); // size up our frame to be the same as the component
         frame.setVisible(true);
+
+        keyboard = new Keyboard();
+        addKeyListener(keyboard);
     }
 
     public synchronized void start() {
