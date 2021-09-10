@@ -14,7 +14,7 @@ public class VisualBuffer {
         Random random = new Random();
         for (int x = 0; x < SIDE; x++)
             for (int y = 0; y < SIDE; y++)
-                tiles[x + y * SIDE] = random.nextInt(0xfffff);
+                tiles[x + y * SIDE] = random.nextInt(0xffffff);
     }
 
     public void renderToBuffer(int xOffset, int yOffset) {

@@ -97,13 +97,11 @@ public class Game extends Canvas implements Runnable {
     private int yOff = 0;
     private int yUpdater = 1;
     public  void update() {
-        xOff++;
-        if (xOff % 2 == 0)
-            yOff+=yUpdater;
-        if (yOff > 100)
-            yUpdater = -1;
-        if (yOff < -100)
-            yUpdater = 1;
+        keyboard.update();
+        if (keyboard.up) yOff++;
+        if (keyboard.down) yOff--;
+        if (keyboard.left) xOff++;
+        if (keyboard.right) xOff--;
     }
 
     public void render() {
