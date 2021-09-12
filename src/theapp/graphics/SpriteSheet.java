@@ -20,9 +20,13 @@ public class SpriteSheet {
             BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
             int w = image.getHeight();
             int h = image.getHeight();
-            image.getRGB(0, 0, w, h, sheet, 0, w)
+            image.getRGB(0, 0, w, h, sheet, 0, w);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public final int getSize() {
+        return SIZE;
     }
 }
