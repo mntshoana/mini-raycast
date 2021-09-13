@@ -13,6 +13,7 @@ public class SpriteSheet {
         this.path = path;
         this.SIZE = size;
         sheet = new int[SIZE * SIZE];
+        loadSheet();
     }
 
     private void loadSheet(){
@@ -24,9 +25,14 @@ public class SpriteSheet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     public final int getSize() {
         return SIZE;
     }
+
+    public static SpriteSheet testSheet = new SpriteSheet("/textures/spritesheet.png", 256);
 }
