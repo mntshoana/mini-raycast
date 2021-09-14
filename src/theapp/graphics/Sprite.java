@@ -26,4 +26,5 @@ public class Sprite {
     }
 
     public static Sprite testColor = new Sprite(16, 0, 0, SpriteSheet.testSheet);
+    public static Sprite grass = new Sprite(16, 1, 0, SpriteSheet.testSheet);
 }

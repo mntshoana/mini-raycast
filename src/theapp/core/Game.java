@@ -66,6 +66,8 @@ public class Game extends Canvas implements Runnable {
         // fps counter
         int framesCounter = 0; // how many framesCounter the computer can actually run
         int updatesCounter = 0; // how many times upadte() is called
+
+        requestFocus();
         while (isRunning) {
             long now = System.nanoTime();
             delta += (now - lastNanoTime) / fractionalUpdate;
