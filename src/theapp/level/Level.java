@@ -3,8 +3,8 @@ package theapp.level;
 import theapp.graphics.VisualBuffer;
 
 public class Level {
-    private int width, height;
-    private int[] tiles;
+    protected int width, height;
+    protected int[] tiles;
 
     public Level (int width, int height) {
         this.width = width;
@@ -16,7 +16,7 @@ public class Level {
     public Level(String path){
         loadLevel(path);
     }
-    private void generateLevel(){
+    protected void generateLevel(){
 
     }
 
