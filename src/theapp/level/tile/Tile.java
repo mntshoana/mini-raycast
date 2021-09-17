@@ -19,5 +19,7 @@ public class Tile {
 
     }
 
+    public static Tile testRed = new EmptyTile(Sprite.testColor);
     public static Tile grass = new GrassTile(Sprite.grass);
+    public static Tile colourBlue = new EmptyTile(Sprite.simpleBlue);
 }

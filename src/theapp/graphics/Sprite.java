@@ -16,6 +16,13 @@ public class Sprite {
         load();
     }
 
+    public Sprite (int size, int colour) {
+        SIZE = size;
+        pixels = new int[SIZE * SIZE];
+        for (int i = 0; i < SIZE*SIZE; i++) {
+            pixels[i] = colour;
+        }
+    }
     private void load() {
         for ( int y = 0; y < SIZE; y++){
             for (int x = 0; x < SIZE; x++){
@@ -26,5 +33,6 @@ public class Sprite {
     }
 
     public static Sprite testColor = new Sprite(16, 0, 0, SpriteSheet.testSheet);
+    public static Sprite simpleBlue = new Sprite(16, 0x0034acd4);
     public static Sprite grass = new Sprite(16, 1, 0, SpriteSheet.testSheet);
 }

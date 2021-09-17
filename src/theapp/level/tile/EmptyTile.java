@@ -3,8 +3,8 @@ package theapp.level.tile;
 import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 
-public class GrassTile extends Tile{
-    public GrassTile (Sprite sprite) {
+public class EmptyTile extends Tile {
+    public EmptyTile (Sprite sprite) {
         super (sprite);
     }
 

@@ -2,6 +2,8 @@ package theapp.core;
 
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
+import theapp.level.Level;
+import theapp.level.RandomLevel;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -18,7 +20,7 @@ public class Game extends Canvas implements Runnable {
     private Thread gameThread;
     private boolean isRunning = false;
 
-
+    private Level level;
     public static int width = 480;
     public static int height = width / 16 * 9;
     public static int scale = 1;
@@ -40,6 +42,8 @@ public class Game extends Canvas implements Runnable {
 
         keyboard = new Keyboard();
         addKeyListener(keyboard);
+
+        level = new RandomLevel(64, 64);
     }
 
     public synchronized void start() {
@@ -113,7 +117,9 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
-        screen.renderToBuffer(xOff,yOff);
+        // probably clear screen here, then ...
+        // screen.renderToBuffer(xOff,yOff);
+        level.render(xOff, yOff, screen);
         int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();
         for (int i = 0; i < screen.pixels.length; i++)
             privateBufRef[i] = screen.pixels[i];
