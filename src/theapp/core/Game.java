@@ -117,7 +117,9 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
-        // probably clear screen here, then ...
+        // probably clear screen here
+        for (int i = 0; i < screen.pixels.length; i++)
+            screen.pixels[i] = 0;
         // screen.renderToBuffer(xOff,yOff);
         level.render(xOff, yOff, screen);
         int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();

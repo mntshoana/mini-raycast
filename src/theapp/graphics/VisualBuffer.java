@@ -5,6 +5,7 @@ import theapp.level.tile.Tile;
 import java.util.Random;
 
 public class VisualBuffer {
+    private int xOffset, yOffset;
     private int width, height;
     public int[] pixels;
     private final int SIDE = 64;
@@ -33,13 +34,13 @@ public class VisualBuffer {
     }
 
     public void renderTileToBuffer (int xp, int yp, Tile tile){
-        //xp -= xPlaPos;
-        //yp -= yPlaPos;
+        xp -= xOffset;
+        yp -= yOffset;
         for ( int y = 0; y < tile.sprite.SIZE; y++){
             int yAbs = y + yp;
             for ( int x = 0; x < tile.sprite.SIZE; x++){
                 int xAbs = x + xp;
-                if (xAbs < 0 || xAbs > width || yAbs < 0 | yAbs > height)
+                if (xAbs < 0 || xAbs > width || yAbs < 0 || yAbs > height)
                     break;
                 pixels[xAbs + yAbs * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
             }
@@ -52,5 +53,10 @@ public class VisualBuffer {
 
     public final int getHeight(){
         return height;
+    }
+
+    public void setOffsets(int x, int y) {
+        xOffset = x;
+        yOffset = y;
     }
 }

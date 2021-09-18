@@ -30,6 +30,7 @@ public class Level {
     }
 
     public void render (int xOffset, int yOffset, VisualBuffer visualBuffer) {
+        visualBuffer.setOffsets(xOffset, yOffset);
         int x0 = xOffset >> 4;
         int x1 = (xOffset + visualBuffer.getWidth()) >> 4;
         int y0 = yOffset >> 4;
@@ -43,9 +44,12 @@ public class Level {
     }
 
     public Tile getTile (int x, int y) {
+        if (x < 0 || y < 0 || x >= width || y >= height)
+            return Tile.colourBlue;
+
         if (tiles[x + y * width] == 0)
             return Tile.grass;
-        else
-            return Tile.colourBlue;
+
+        return Tile.colourBlue;
     }
 }
