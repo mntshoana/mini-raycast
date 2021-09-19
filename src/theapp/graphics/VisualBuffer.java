@@ -40,7 +40,9 @@ public class VisualBuffer {
             int yAbs = y + yp;
             for ( int x = 0; x < tile.sprite.SIZE; x++){
                 int xAbs = x + xp;
-                if (xAbs < 0 || xAbs > width || yAbs < 0 || yAbs > height)
+                if (xAbs >= -16 && xAbs < 0)
+                    xAbs = 0;
+                if (xAbs < 0 || xAbs >= width || yAbs < 0 || yAbs >= height)
                     break;
                 pixels[xAbs + yAbs * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
             }

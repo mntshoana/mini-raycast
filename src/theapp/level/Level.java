@@ -31,10 +31,11 @@ public class Level {
 
     public void render (int xOffset, int yOffset, VisualBuffer visualBuffer) {
         visualBuffer.setOffsets(xOffset, yOffset);
+        int addedRenderLength = 16;
         int x0 = xOffset >> 4;
-        int x1 = (xOffset + visualBuffer.getWidth()) >> 4;
+        int x1 = (xOffset + visualBuffer.getWidth() + addedRenderLength) >> 4;
         int y0 = yOffset >> 4;
-        int y1 = (yOffset + visualBuffer.getHeight()) >> 4;
+        int y1 = (yOffset + visualBuffer.getHeight() + addedRenderLength) >> 4;
 
         for (int y = y0; y < y1; y++){
             for (int x = x0; x < x1; x++){
