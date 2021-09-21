@@ -1,5 +1,6 @@
 package theapp.core;
 
+import theapp.entity.Player;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 import theapp.level.Level;
@@ -17,6 +18,7 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage privateBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private VisualBuffer screen;
     private Keyboard keyboard;
+    private Player player;
     private Thread gameThread;
     private boolean isRunning = false;
 
@@ -44,6 +46,8 @@ public class Game extends Canvas implements Runnable {
         addKeyListener(keyboard);
 
         level = new RandomLevel(64, 64);
+
+        player = new Player(keyboard);
     }
 
     public synchronized void start() {
@@ -99,15 +103,10 @@ public class Game extends Canvas implements Runnable {
         stop();
     }
 
-    private int xOff = 0;
-    private int yOff = 0;
     private int yUpdater = 1;
     public  void update() {
         keyboard.update();
-        if (keyboard.up) yOff++;
-        if (keyboard.down) yOff--;
-        if (keyboard.left) xOff++;
-        if (keyboard.right) xOff--;
+        player.update();
     }
 
     public void render() {
@@ -121,7 +120,7 @@ public class Game extends Canvas implements Runnable {
         for (int i = 0; i < screen.pixels.length; i++)
             screen.pixels[i] = 0;
         // screen.renderToBuffer(xOff,yOff);
-        level.render(xOff, yOff, screen);
+        level.render(player.x, player.y, screen);
         int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();
         for (int i = 0; i < screen.pixels.length; i++)
             privateBufRef[i] = screen.pixels[i];

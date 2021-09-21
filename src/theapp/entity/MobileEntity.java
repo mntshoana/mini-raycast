@@ -9,8 +9,16 @@ public abstract class MobileEntity extends VisibleEntity {
 
     }
 
-    public void move () {
+    public void move (int horiz, int verti) {
+        if (horiz > 0) direction = 1; // east
+        if (horiz < 0) direction = 3;  // west
+        if (verti > 0) direction = 2;  // south
+        if (verti < 0) direction = 0; // north
 
+        if (!isCollision()) {
+            x += horiz;
+            y += verti;
+        }
     }
 
     private boolean isCollision() {
