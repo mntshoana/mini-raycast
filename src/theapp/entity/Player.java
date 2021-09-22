@@ -15,10 +15,14 @@ public class Player extends MobileEntity {
 
     @Override
     public void update (){
-        if (controller.up) y--;
-        if (controller.down) y++;
-        if (controller.left) x--;
-        if (controller.right) x++;
+        int tempX = 0, tempY = 0;
+        if (controller.up) tempY--;
+        if (controller.down) tempY++;
+        if (controller.left) tempX--;
+        if (controller.right) tempX++;
+
+        if (tempX != 0 || tempY != 0)
+            move(tempX, tempY);
     }
 
     @Override
