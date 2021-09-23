@@ -120,7 +120,11 @@ public class Game extends Canvas implements Runnable {
         for (int i = 0; i < screen.pixels.length; i++)
             screen.pixels[i] = 0;
         // screen.renderToBuffer(xOff,yOff);
-        level.render(player.x, player.y, screen);
+        // move level to centre player
+        int xMoved = player.x - screen.getWidth()/2;
+        int yMoved = player.y - screen.getHeight()/2;
+        level.render(xMoved, yMoved, screen);
+        player.render(screen);
         int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();
         for (int i = 0; i < screen.pixels.length; i++)
             privateBufRef[i] = screen.pixels[i];

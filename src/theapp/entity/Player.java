@@ -1,5 +1,7 @@
 package theapp.entity;
 
+import theapp.graphics.Sprite;
+import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 
 public class Player extends MobileEntity {
@@ -26,7 +28,7 @@ public class Player extends MobileEntity {
     }
 
     @Override
-    public void render () {
-
+    public void render (VisualBuffer visualBuffer) {
+        visualBuffer.renderPlayerToBuffer(x - Sprite.character1.SIZE/2, y - Sprite.character1.SIZE/2, Sprite.character1);
     }
 }

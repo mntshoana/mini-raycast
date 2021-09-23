@@ -34,5 +34,6 @@ public class SpriteSheet {
         return SIZE;
     }
 
-    public static SpriteSheet testSheet = new SpriteSheet("/textures/spritesheet.png", 256);
+    public static SpriteSheet assetSheet = new SpriteSheet("/textures/spritesheet.png", 256);
+    public static SpriteSheet characterSheet = new SpriteSheet("/textures/charactersheet.png", 128);
 }

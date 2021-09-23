@@ -32,7 +32,8 @@ public class Sprite {
         }
     }
 
-    public static Sprite testColor = new Sprite(16, 0, 0, SpriteSheet.testSheet);
+    public static Sprite testColor = new Sprite(16, 0, 0, SpriteSheet.assetSheet);
     public static Sprite simpleBlue = new Sprite(16, 0x0034acd4);
-    public static Sprite grass = new Sprite(16, 1, 0, SpriteSheet.testSheet);
+    public static Sprite grass = new Sprite(16, 1, 0, SpriteSheet.assetSheet);
+    public static Sprite character1 = new Sprite(32, 0, 0, SpriteSheet.characterSheet);
 }

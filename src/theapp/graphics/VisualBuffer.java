@@ -1,5 +1,6 @@
 package theapp.graphics;
 
+import theapp.entity.Player;
 import theapp.level.tile.Tile;
 
 import java.util.Random;
@@ -45,6 +46,24 @@ public class VisualBuffer {
                 if (xAbs < 0 || xAbs >= width || yAbs < 0 || yAbs >= height)
                     break;
                 pixels[xAbs + yAbs * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+            }
+        }
+    }
+
+    public void renderPlayerToBuffer (int xp, int yp, Sprite sprite){
+        xp -= xOffset;
+        yp -= yOffset;
+        for ( int y = 0; y < sprite.SIZE; y++){
+            int yAbs = y + yp;
+            for ( int x = 0; x < sprite.SIZE; x++){
+                int xAbs = x + xp;
+                if (xAbs >= -16 && xAbs < 0)
+                    xAbs = 0;
+                if (xAbs < -sprite.SIZE || xAbs >= width || yAbs < 0 || yAbs >= height)
+                    break;
+                int colour = sprite.pixels[x + y * sprite.SIZE];
+                if (colour != 0xffff00ff)
+                    pixels[xAbs + yAbs * width] = colour;
             }
         }
     }
