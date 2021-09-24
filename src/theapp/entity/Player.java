@@ -4,6 +4,8 @@ import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 
+import java.security.SecureRandomParameters;
+
 public class Player extends MobileEntity {
     private Keyboard controller;
     public Player(Keyboard keyboard) { // default location
@@ -29,6 +31,11 @@ public class Player extends MobileEntity {
 
     @Override
     public void render (VisualBuffer visualBuffer) {
-        visualBuffer.renderPlayerToBuffer(x - Sprite.character1.SIZE/2, y - Sprite.character1.SIZE/2, Sprite.character1);
+        if (direction == 0) sprite = Sprite.character1Up;
+        if (direction == 1) sprite = Sprite.character1Right;
+        if (direction == 2) sprite = Sprite.character1Down;
+        if (direction == 3) sprite = Sprite.character1Left;
+
+        visualBuffer.renderPlayerToBuffer(x - sprite.SIZE/2, y - sprite.SIZE/2, sprite);
     }
 }
