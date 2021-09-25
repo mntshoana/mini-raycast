@@ -40,4 +40,15 @@ public class Sprite {
     public static Sprite character1Down = new Sprite(32, 1, 0, SpriteSheet.characterSheet);
     public static Sprite character1Left = new Sprite(32, 1, 1, SpriteSheet.characterSheet);
     public static Sprite character1Right = new Sprite(32, 1, 2, SpriteSheet.characterSheet);
+    // Left foot forward
+    public static Sprite character1UpLFF = new Sprite(32, 2, 3, SpriteSheet.characterSheet);
+    public static Sprite character1DownLFF = new Sprite(32, 2, 0, SpriteSheet.characterSheet);
+    public static Sprite character1LeftLFF = new Sprite(32, 2, 1, SpriteSheet.characterSheet);
+    public static Sprite character1RightLFF = new Sprite(32, 2, 2, SpriteSheet.characterSheet);
+    // Right foot forward
+    public static Sprite character1UpRFF = new Sprite(32, 0, 3, SpriteSheet.characterSheet);
+    public static Sprite character1DownRFF = new Sprite(32, 0, 0, SpriteSheet.characterSheet);
+    public static Sprite character1LeftRFF = new Sprite(32, 0, 1, SpriteSheet.characterSheet);
+    public static Sprite character1RightRFF = new Sprite(32, 0, 2, SpriteSheet.characterSheet);
+
 }
