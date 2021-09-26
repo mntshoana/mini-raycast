@@ -48,8 +48,15 @@ public class Level {
         if (x < 0 || y < 0 || x >= width || y >= height)
             return Tile.colourBlue;
 
-        if (tiles[x + y * width] == 0)
+        int tile = tiles[x + y * width];
+        if (tile >= 0 && tile <= 196 )
             return Tile.grass;
+        if (tiles[x + y * width] == 197)
+            return Tile.rock;
+        if (tiles[x + y * width] == 198)
+            return Tile.flower;
+        if (tiles[x + y * width] == 199)
+            return Tile.tree;
 
         return Tile.colourBlue;
     }

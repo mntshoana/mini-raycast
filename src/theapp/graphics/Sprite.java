@@ -32,9 +32,11 @@ public class Sprite {
         }
     }
 
-    public static Sprite testColor = new Sprite(16, 0, 0, SpriteSheet.assetSheet);
     public static Sprite simpleBlue = new Sprite(16, 0x0034acd4);
-    public static Sprite grass = new Sprite(16, 1, 0, SpriteSheet.assetSheet);
+    public static Sprite grass = new Sprite(16, 0, 0, SpriteSheet.assetSheet);
+    public static Sprite rock = new Sprite(16, 1, 0, SpriteSheet.assetSheet);
+    public static Sprite flower = new Sprite(16, 2, 0, SpriteSheet.assetSheet);
+    public static Sprite tree = new Sprite(16, 3, 0, SpriteSheet.assetSheet);
 
     public static Sprite character1Up = new Sprite(32, 1, 3, SpriteSheet.characterSheet);
     public static Sprite character1Down = new Sprite(32, 1, 0, SpriteSheet.characterSheet);
