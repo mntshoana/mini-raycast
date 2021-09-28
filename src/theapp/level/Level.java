@@ -5,17 +5,16 @@ import theapp.level.tile.Tile;
 
 public class Level {
     protected int width, height;
-    protected int[] tiles;
 
     public Level (int width, int height) {
         this.width = width;
         this.height = height;
-        tiles = new int[width * height];
         generateLevel();
     }
 
     public Level(String path){
         loadLevel(path);
+        generateLevel();
     }
     protected void generateLevel(){
 
@@ -45,19 +44,6 @@ public class Level {
     }
 
     public Tile getTile (int x, int y) {
-        if (x < 0 || y < 0 || x >= width || y >= height)
-            return Tile.colourBlue;
-
-        int tile = tiles[x + y * width];
-        if (tile >= 0 && tile <= 196 )
-            return Tile.grass;
-        if (tiles[x + y * width] == 197)
-            return Tile.rock;
-        if (tiles[x + y * width] == 198)
-            return Tile.flower;
-        if (tiles[x + y * width] == 199)
-            return Tile.tree;
-
         return Tile.colourBlue;
     }
 }
