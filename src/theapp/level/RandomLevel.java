@@ -6,7 +6,6 @@ import java.util.Random;
 
 public class RandomLevel extends Level {
     private Random random;
-    private int[] tiles;
 
     public RandomLevel(int width, int height) {
         super(width, height);

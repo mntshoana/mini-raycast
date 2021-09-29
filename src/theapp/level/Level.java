@@ -5,6 +5,7 @@ import theapp.level.tile.Tile;
 
 public class Level {
     protected int width, height;
+    protected int[] tiles;
 
     public Level (int width, int height) {
         this.width = width;
