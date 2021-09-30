@@ -1,6 +1,5 @@
 package theapp.graphics;
 
-import theapp.entity.Player;
 import theapp.level.tile.Tile;
 
 import java.util.Random;

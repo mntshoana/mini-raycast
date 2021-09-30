@@ -47,4 +47,6 @@ public class Level {
     public Tile getTile (int x, int y) {
         return Tile.colourBlue;
     }
+
+    public static Level level1 = new LoadedLevel("/textures/simpleMap.png");
 }

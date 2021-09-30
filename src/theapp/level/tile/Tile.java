@@ -24,4 +24,9 @@ public class Tile {
     public static Tile flower = new FlowerTile(Sprite.flower);
     public static Tile tree = new TreeTile(Sprite.tree);
     public static Tile colourBlue = new EmptyTile(Sprite.simpleBlue);
+
+    public static final int COLOUR_GRASS = 0xff00ff00;
+    public static final int COLOUR_FLOWER = 0xffffff00;
+    public static final int COLOUR_TREE = 0xff7f7f00;
+    public static final int COLOUR_ROCK = 0xff7f7f7f;
 }

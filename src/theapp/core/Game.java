@@ -5,7 +5,6 @@ import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 import theapp.level.Level;
 import theapp.level.LoadedLevel;
-import theapp.level.RandomLevel;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -46,7 +45,7 @@ public class Game extends Canvas implements Runnable {
         keyboard = new Keyboard();
         addKeyListener(keyboard);
 
-        level = new LoadedLevel("/textures/simpleMap.png");
+        level = Level.level1;
 
         player = new Player(keyboard);
     }

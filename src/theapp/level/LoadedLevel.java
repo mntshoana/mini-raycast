@@ -36,10 +36,10 @@ public class LoadedLevel extends Level {
             return Tile.colourBlue;
 
             if (tiles[x + y * width] == 0x000000) return Tile.colourBlue;// black = wall (temporarily blue)
-            else if (tiles[x + y * width] == 0xff00ff00) return Tile.grass; // green = grass
-            else if (tiles[x + y * width] == 0xffffff00) return Tile.flower;// yellow = flower
-            else if (tiles[x + y * width] == 0xff7f7f00) return Tile.tree;// brown = tree
-            else if (tiles[x + y * width] == 0xff7f7f7f) return Tile.rock;// gray = rock
+            else if (tiles[x + y * width] == Tile.COLOUR_GRASS) return Tile.grass;
+            else if (tiles[x + y * width] == Tile.COLOUR_FLOWER) return Tile.flower;// yellow = flower
+            else if (tiles[x + y * width] == Tile.COLOUR_TREE) return Tile.tree;// brown = tree
+            else if (tiles[x + y * width] == Tile.COLOUR_ROCK) return Tile.rock;// gray = rock
             else return Tile.colourBlue;
     }
 }
