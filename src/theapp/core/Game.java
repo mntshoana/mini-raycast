@@ -5,6 +5,7 @@ import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 import theapp.level.Level;
 import theapp.level.LoadedLevel;
+import theapp.level.location.Coordinate;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -47,7 +48,8 @@ public class Game extends Canvas implements Runnable {
 
         level = Level.level1;
 
-        player = new Player(keyboard);
+        Coordinate pCoordinate = new Coordinate(0, 0);
+        player = new Player(keyboard, pCoordinate.x(), pCoordinate.y());
     }
 
     public synchronized void start() {

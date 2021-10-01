@@ -4,19 +4,15 @@ import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 
-import java.security.SecureRandomParameters;
-
 public class Player extends MobileEntity {
     private Keyboard controller;
     public Player(Keyboard keyboard) { // default location
         controller = keyboard;
-        sprite = Sprite.character1Down;
     }
     public Player (Keyboard keyboard, int x, int y) {
         this.x = x;
         this.y = y;
         controller = keyboard;
-        sprite = Sprite.character1Down;
     }
 
     @Override
