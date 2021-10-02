@@ -20,4 +20,8 @@ public class Entity {
     public boolean isRemoved () {
         return removed;
     }
+
+    public void initLevel( Level level){
+        this.level = level;
+    }
 }

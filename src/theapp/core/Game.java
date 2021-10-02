@@ -50,6 +50,7 @@ public class Game extends Canvas implements Runnable {
 
         Coordinate pCoordinate = new Coordinate(0, 0);
         player = new Player(keyboard, pCoordinate.x(), pCoordinate.y());
+        player.initLevel(level);
     }
 
     public synchronized void start() {
