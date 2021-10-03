@@ -13,6 +13,13 @@ public abstract class MobileEntity extends VisibleEntity {
     }
 
     public void move (int horiz, int verti) {
+        if (horiz != 0 && verti != 0){
+            // diagonal
+            // so collision does not prevent both movements if the other is possible
+            move (horiz, 0);
+            move (0, verti);
+            return;
+        }
         if (horiz > 0) direction = 1; // east
         if (horiz < 0) direction = 3;  // west
         if (verti > 0) direction = 2;  // south
