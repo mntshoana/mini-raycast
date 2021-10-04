@@ -32,13 +32,14 @@ public abstract class MobileEntity extends VisibleEntity {
     }
 
     private boolean isCollision(int horiz, int verti) {
-        final int centerToFeet = 12;
-        final int centerToFace = (horiz > 0) ? 8 : (horiz < 0) ? -8 : 0;
-        final int xTileCoord = (x+horiz +centerToFace) / 16;
-        final int yTileCoord = (y+verti +centerToFeet) / 16 ; //  bcoz player uses 32 x 32 sprite. moving reference from center to feet
-        System.out.println("X: " + xTileCoord + " Y: " + yTileCoord);
-        // detect collision
-        return level.getTile(xTileCoord, yTileCoord).isSolid();
+        boolean collides = false;
+        for (int corner = 0; corner < 4; corner++){
+            int xWise = corner % 2 * 12 - 6;
+            int yWise = corner / 2 * 8 + 6;
+            if (level.getTile((x+horiz + xWise) / 16, (y+verti + yWise) / 16).isSolid() )
+                collides = true;
+        }
+       return collides;
 
     }
 
