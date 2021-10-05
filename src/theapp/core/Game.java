@@ -3,6 +3,7 @@ package theapp.core;
 import theapp.entity.Player;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
+import theapp.input.Mouse;
 import theapp.level.Level;
 import theapp.level.LoadedLevel;
 import theapp.level.location.Coordinate;
@@ -19,6 +20,7 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage privateBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private VisualBuffer screen;
     private Keyboard keyboard;
+    private Mouse mouse;
     private Player player;
     private Thread gameThread;
     private boolean isRunning = false;
@@ -44,7 +46,10 @@ public class Game extends Canvas implements Runnable {
         frame.setVisible(true);
 
         keyboard = new Keyboard();
+        mouse = new Mouse();
         addKeyListener(keyboard);
+        addMouseListener(mouse);
+        addMouseMotionListener(mouse);
 
         level = Level.level1;
 
