@@ -3,6 +3,7 @@ package theapp.entity;
 import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
+import theapp.input.Mouse;
 
 public class Player extends MobileEntity {
     private Keyboard controller;
@@ -27,6 +28,12 @@ public class Player extends MobileEntity {
         if (controller.left) tempX--;
         if (controller.right) tempX++;
 
+        // Shoot
+        if (Mouse.getButton() == 1) {
+            double projectileDirection = 0.0; // dummy direction
+            shootToMouse(x, y, projectileDirection);
+        }
+        // move player
         if (tempX != 0 || tempY != 0) {
             move(tempX, tempY);
             moving = true;

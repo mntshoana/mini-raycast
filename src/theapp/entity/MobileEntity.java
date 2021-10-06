@@ -47,4 +47,8 @@ public abstract class MobileEntity extends VisibleEntity {
     public void render (VisualBuffer visualBuffer) {
 
     }
+
+    protected void shootToMouse(int x, int y, double direction) {
+
+    }
 }
