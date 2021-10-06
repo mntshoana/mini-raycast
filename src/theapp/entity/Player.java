@@ -1,5 +1,6 @@
 package theapp.entity;
 
+import theapp.core.Game;
 import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
@@ -30,7 +31,9 @@ public class Player extends MobileEntity {
 
         // Shoot
         if (Mouse.getButton() == 1) {
-            double projectileDirection = 0.0; // dummy direction
+            double opposite =  Game.height/2 - Mouse.getY();
+            double adjacent = Mouse.getX() - Game.width/2;
+            double projectileDirection = Math.atan2(opposite, adjacent);
             shootToMouse(x, y, projectileDirection);
         }
         // move player
