@@ -31,8 +31,8 @@ public class Player extends MobileEntity {
 
         // Shoot
         if (Mouse.getButton() == 1) {
-            double opposite =  Game.height/2 - Mouse.getY();
-            double adjacent = Mouse.getX() - Game.width/2;
+            double opposite =  (Game.height*Game.scale)/2 - Mouse.getY();
+            double adjacent = Mouse.getX() - (Game.width * Game.scale)/2;
             double projectileDirection = Math.atan2(opposite, adjacent);
             shootToMouse(x, y, projectileDirection);
         }

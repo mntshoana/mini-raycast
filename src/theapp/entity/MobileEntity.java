@@ -49,6 +49,6 @@ public abstract class MobileEntity extends VisibleEntity {
     }
 
     protected void shootToMouse(int x, int y, double direction) {
-        System.out.println("Angle of projection: " + direction);
+        System.out.println("Angle of projection: " + direction * (180/Math.PI));
     }
 }
