@@ -1,11 +1,16 @@
 package theapp.level;
 
+import theapp.entity.Entity;
 import theapp.graphics.VisualBuffer;
 import theapp.level.tile.Tile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Level {
     protected int width, height;
     protected int[] tiles;
+    private List<Entity> entityList = new ArrayList<>();
 
     public Level (int width, int height) {
         this.width = width;
@@ -25,8 +30,12 @@ public class Level {
 
     }
 
+    public void addEntity (Entity e) {
+        entityList.add(e);
+    }
     public void update() {
-
+        for (int i = 0; i < entityList.size(); i++)
+            entityList.get(i).update();
     }
 
     public void render (int xOffset, int yOffset, VisualBuffer visualBuffer) {
@@ -42,6 +51,8 @@ public class Level {
                 getTile(x, y).render(x << 4,y << 4, visualBuffer);
             }
         }
+        for (int i = 0; i < entityList.size(); i++)
+            entityList.get(i).render(visualBuffer);
     }
 
     public Tile getTile (int x, int y) {

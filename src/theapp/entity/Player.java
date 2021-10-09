@@ -6,8 +6,12 @@ import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 import theapp.input.Mouse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player extends MobileEntity {
     private Keyboard controller;
+    private List<Projectile> projectiles = new ArrayList<>();
     public Player(Keyboard keyboard) { // default location
         controller = keyboard;
     }
@@ -31,7 +35,7 @@ public class Player extends MobileEntity {
 
         // Shoot
         if (Mouse.getButton() == 1) {
-            double opposite =  (Game.height*Game.scale)/2 - Mouse.getY();
+            double opposite = Mouse.getY() -  (Game.height*Game.scale)/2;
             double adjacent = Mouse.getX() - (Game.width * Game.scale)/2;
             double projectileDirection = Math.atan2(opposite, adjacent);
             shootToMouse(x, y, projectileDirection);
@@ -78,5 +82,11 @@ public class Player extends MobileEntity {
         }
 
         visualBuffer.renderPlayerToBuffer(x - sprite.SIZE/2, y - sprite.SIZE/2, sprite);
+    }
+
+    protected void shootToMouse(int x, int y, double direction) {
+        Projectile p = new PlayerProjectile(x, y, direction);
+        projectiles.add(p);
+        level.addEntity(p);
     }
 }

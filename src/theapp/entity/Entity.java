@@ -1,5 +1,6 @@
 package theapp.entity;
 
+import theapp.graphics.VisualBuffer;
 import theapp.level.Level;
 
 import java.util.Random;
@@ -11,6 +12,10 @@ public class Entity {
 
     public void update() {
 
+    }
+
+    public void render (VisualBuffer visualBuffer) {
+        // Meant to be empty
     }
 
     public void remove() {
