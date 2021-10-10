@@ -48,7 +48,10 @@ public class VisualBuffer {
                     xAbs = 0;
                 if (xAbs < 0 || xAbs >= width || yAbs < 0 || yAbs >= height)
                     break;
-                pixels[xAbs + yAbs * width] = sprite.pixels[x + y * sprite.SIZE];
+
+                int colour = sprite.pixels[x + y * sprite.SIZE];
+                if (colour != 0xffff00ff)
+                    pixels[xAbs + yAbs * width] = sprite.pixels[x + y * sprite.SIZE];
             }
         }
     }

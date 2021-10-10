@@ -35,5 +35,6 @@ public class SpriteSheet {
     }
 
     public static SpriteSheet assetSheet = new SpriteSheet("/textures/spritesheet.png", 256);
+    public static SpriteSheet projectileSheet = new SpriteSheet("/textures/projectilesheet.png", 256);
     public static SpriteSheet characterSheet = new SpriteSheet("/textures/charactersheet.png", 128);
 }

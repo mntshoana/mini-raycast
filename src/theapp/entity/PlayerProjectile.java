@@ -15,7 +15,7 @@ public class PlayerProjectile extends Projectile {
         xInc = (int) (speed * Math.cos(angle) );
         yInc = (int) (speed * Math.sin(angle) );
 
-        sprite = Sprite.simpleBlue;
+        sprite = Sprite.fireOrange;
     }
 
     @Override
