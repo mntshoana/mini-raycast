@@ -34,8 +34,13 @@ public class Level {
         entityList.add(e);
     }
     public void update() {
-        for (int i = 0; i < entityList.size(); i++)
+        for (int i = 0; i < entityList.size(); i++) {
+            if (entityList.get(i).isRemoved()) {
+                entityList.remove(i);
+                continue;
+            }
             entityList.get(i).update();
+        }
     }
 
     public void render (int xOffset, int yOffset, VisualBuffer visualBuffer) {

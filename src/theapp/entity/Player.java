@@ -40,6 +40,13 @@ public class Player extends MobileEntity {
             double projectileDirection = Math.atan2(opposite, adjacent);
             shootToMouse(x, y, projectileDirection);
         }
+        // Clear projectiles
+        for (int i = 0; i < projectiles.size(); i++) {
+            if (projectiles.get(i).isRemoved()) {
+                projectiles.remove(i);
+            }
+        }
+
         // move player
         if (tempX != 0 || tempY != 0) {
             move(tempX, tempY);
@@ -89,4 +96,5 @@ public class Player extends MobileEntity {
         projectiles.add(p);
         level.addEntity(p);
     }
+
 }

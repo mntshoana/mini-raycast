@@ -27,6 +27,8 @@ public class PlayerProjectile extends Projectile {
     public void move (double horiz, double verti) {
         x += horiz;
         y += verti;
+        if (calcDistance() > range)
+            remove();
     }
 
     @Override
