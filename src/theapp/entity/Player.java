@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends MobileEntity {
+    private int pauseRateOfFire;
     private Keyboard controller;
     private List<Projectile> projectiles = new ArrayList<>();
     public Player(Keyboard keyboard) { // default location
@@ -18,6 +19,7 @@ public class Player extends MobileEntity {
     public Player (Keyboard keyboard, int x, int y) {
         this.x = x;
         this.y = y;
+        pauseRateOfFire = Projectile.pauseRateOfFire;
         controller = keyboard;
     }
 
@@ -35,10 +37,15 @@ public class Player extends MobileEntity {
 
         // Shoot
         if (Mouse.getButton() == 1) {
-            double opposite = Mouse.getY() -  (Game.height*Game.scale)/2;
-            double adjacent = Mouse.getX() - (Game.width * Game.scale)/2;
-            double projectileDirection = Math.atan2(opposite, adjacent);
-            shootToMouse(x, y, projectileDirection);
+            if (pauseRateOfFire > 0)
+                pauseRateOfFire--;
+            else {
+                double opposite = Mouse.getY() - (Game.height * Game.scale) / 2;
+                double adjacent = Mouse.getX() - (Game.width * Game.scale) / 2;
+                double projectileDirection = Math.atan2(opposite, adjacent);
+                shootToMouse(x, y, projectileDirection);
+                pauseRateOfFire = Projectile.pauseRateOfFire;
+            }
         }
         // Clear projectiles
         for (int i = 0; i < projectiles.size(); i++) {

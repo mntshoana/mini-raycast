@@ -7,10 +7,11 @@ public class Projectile extends MobileEntity {
     protected final int ySpawn;
     protected double angle;
     protected double speed;
-    protected double rateOfFire;
     protected double range;
     protected double distance;
     protected double damage;
+
+    public static int pauseRateOfFire = 8; // pauses before firing next projectile
 
     public Projectile (int x, int y, double direction) {
         this.x = xSpawn = x;

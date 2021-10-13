@@ -10,7 +10,6 @@ public class PlayerProjectile extends Projectile {
         range = 200;
         speed = 4;
         damage = 20;
-        rateOfFire = 15;
 
         xInc = (speed * Math.cos(angle) );
         yInc = (speed * Math.sin(angle) );
