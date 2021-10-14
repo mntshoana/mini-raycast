@@ -19,13 +19,18 @@ public class PlayerProjectile extends Projectile {
 
     @Override
     public void update() {
-        move(xInc, yInc);
+        if (level.isCollision((int)x, (int)y, (int)xInc, (int)yInc, sprite.SIZE)) {
+            remove();
+        }
+        else
+            move();
+
     }
 
     // Hides move(int, int)
-    public void move (double horiz, double verti) {
-        x += horiz;
-        y += verti;
+    public void move () {
+        x += xInc;
+        y += yInc;
         if (calcDistance() > range)
             remove();
     }

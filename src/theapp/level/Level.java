@@ -31,8 +31,22 @@ public class Level {
     }
 
     public void addEntity (Entity e) {
+        e.initLevel(this);
         entityList.add(e);
     }
+
+    public boolean isCollision(int xPos, int yPos, int horizDirection, int vertiDirection, int objectSize) {
+        boolean collides = false;
+        for (int corner = 0; corner < 4; corner++){
+            int xWise = corner % 2 * objectSize;
+            int yWise = corner / 2 * objectSize;
+            if (getTile((xPos+horizDirection + xWise) / 16, (yPos+vertiDirection + yWise) / 16).isSolid() )
+                collides = true;
+        }
+        return collides;
+
+    }
+
     public void update() {
         for (int i = 0; i < entityList.size(); i++) {
             if (entityList.get(i).isRemoved()) {
