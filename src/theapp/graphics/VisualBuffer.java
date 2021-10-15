@@ -56,6 +56,27 @@ public class VisualBuffer {
         }
     }
 
+    public void renderParticleToBuffer (int xp, int yp, Particle particle, boolean fixed){
+        if (fixed) {
+            xp -= xOffset;
+            yp -= yOffset;
+        }
+        for ( int y = 0; y < particle.getHeight(); y++){
+            int yAbs = y + yp;
+            for ( int x = 0; x < particle.getWidth(); x++){
+                int xAbs = x + xp;
+                if (xAbs >= -16 && xAbs < 0)
+                    xAbs = 0;
+                if (xAbs < 0 || xAbs >= width || yAbs < 0 || yAbs >= height)
+                    break;
+
+                int colour = particle.pixels[x + y * particle.getWidth()];
+                if (colour != 0xffff00ff)
+                    pixels[xAbs + yAbs * width] = particle.pixels[x + y * particle.getWidth()];
+            }
+        }
+    }
+
     public void renderPlayerToBuffer (int xp, int yp, Sprite sprite){
         xp -= xOffset;
         yp -= yOffset;

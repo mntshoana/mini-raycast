@@ -1,6 +1,7 @@
 package theapp.core;
 
 import theapp.entity.Player;
+import theapp.graphics.Particle;
 import theapp.graphics.VisualBuffer;
 import theapp.input.Keyboard;
 import theapp.input.Mouse;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable {
     private JFrame frame;
@@ -134,6 +136,14 @@ public class Game extends Canvas implements Runnable {
         int yMoved = player.y - screen.getHeight()/2;
         level.render(xMoved, yMoved, screen);
         player.render(screen);
+
+        Random random = new Random();
+        Particle particle  = new Particle(2, 2, 0xffffffff);
+        for (int i = 0; i < 100; i++){
+            int x = random.nextInt(20);
+            int y = random.nextInt(20);
+            screen.renderParticleToBuffer(width - 60 + x, 50 + y, particle, true);
+        }
         int privateBufRef[] = ((DataBufferInt)(privateBuffer.getRaster().getDataBuffer())).getData();
         for (int i = 0; i < screen.pixels.length; i++)
             privateBufRef[i] = screen.pixels[i];

@@ -1,9 +1,5 @@
 package theapp.graphics;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-
 public class Sprite {
     public final int SIZE;
     private int x, y;
