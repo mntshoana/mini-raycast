@@ -34,6 +34,12 @@ public class Level {
         e.initLevel(this);
         entityList.add(e);
     }
+    public void addEntityList (List<? extends Entity> list) {
+        for (Entity e : list) {
+            e.initLevel(this);
+            entityList.add(e);
+        }
+    }
 
     public boolean isCollision(int xPos, int yPos, int horizDirection, int vertiDirection, int objectSize) {
         boolean collides = false;

@@ -3,7 +3,6 @@ package theapp.graphics;
 public class Particle {
     private int width;
     private int height;
-    private int x, y;
     public int[] pixels;
 
     public Particle (int width, int height, int colour) {
@@ -19,4 +18,7 @@ public class Particle {
 
     public int getWidth() { return width;}
     public int getHeight() { return height;}
+
+    public static Particle simpleWhite = new Particle(3,3, 0xffaaaaaa);
+
 }

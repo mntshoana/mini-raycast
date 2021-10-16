@@ -3,6 +3,8 @@ package theapp.entity;
 import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 
+import java.util.List;
+
 public class PlayerProjectile extends Projectile {
     private final double xInc, yInc;
     public PlayerProjectile (int x, int y, double direction) {
@@ -21,6 +23,8 @@ public class PlayerProjectile extends Projectile {
     public void update() {
         if (level.isCollision((int)x, (int)y, (int)xInc, (int)yInc, sprite.SIZE)) {
             remove();
+            List<ParticleEntity> particles = ParticleEntity.generateParticles((int)x, (int)y, 5, 25);
+            level.addEntityList(particles);
         }
         else
             move();
