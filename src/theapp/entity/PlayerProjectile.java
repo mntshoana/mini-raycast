@@ -4,7 +4,7 @@ import theapp.graphics.Sprite;
 import theapp.graphics.VisualBuffer;
 
 public class PlayerProjectile extends Projectile {
-    private final int xInc, yInc;
+    private final double xInc, yInc;
     public PlayerProjectile (int x, int y, double direction) {
         super (x, y, direction);
         range = 200;
@@ -12,10 +12,10 @@ public class PlayerProjectile extends Projectile {
         damage = 20;
         rateOfFire = 15;
 
-        xInc = (int) (speed * Math.cos(angle) );
-        yInc = (int) (speed * Math.sin(angle) );
+        xInc = (speed * Math.cos(angle) );
+        yInc = (speed * Math.sin(angle) );
 
-        sprite = Sprite.fireOrange;
+        sprite = Sprite.fireOrange.rotate(angle);
     }
 
     @Override
@@ -23,15 +23,15 @@ public class PlayerProjectile extends Projectile {
         move(xInc, yInc);
     }
 
-    @Override
-    public void move (int horiz, int verti) {
+    // Hides move(int, int)
+    public void move (double horiz, double verti) {
         x += horiz;
         y += verti;
     }
 
     @Override
     public void render (VisualBuffer visualBuffer) {
-        visualBuffer.renderTileToBuffer(x, y, sprite);
+        visualBuffer.renderTileToBuffer((int)x, (int)y, sprite);
     }
 
 }
